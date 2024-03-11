@@ -1,6 +1,7 @@
 #ifndef JEU_HPP
 #define JEU_HPP
 
+#include <queue>
 #include <list>
 
 typedef enum { VIDE, MUR } Case;
@@ -26,6 +27,7 @@ protected:
     int largeur, hauteur; // Nombre de cases en largeur et en hauteur
     std::list<Position> snake;
     Direction dirSnake;
+    std::queue<Direction> directionsBuffer;
 
 public:
     Jeu();

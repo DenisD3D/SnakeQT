@@ -111,6 +111,11 @@ bool Jeu::init() {
 }
 
 void Jeu::evolue() {
+    if (!directionsBuffer.empty()) {
+        dirSnake = directionsBuffer.front();
+        directionsBuffer.pop();
+    }
+
     Position posTest;
     list<Position>::iterator itSnake;
 
@@ -155,8 +160,24 @@ bool Jeu::posValide(const Position &pos) const {
         return false;
 }
 
-void Jeu::setDirection(Direction dir) {
-    dirSnake = dir;
+void Jeu::setDirection(const Direction dir) {
+    // Input buffer is full
+    if (directionsBuffer.size() > 4)
+        return;
+
+    Direction previousDir = directionsBuffer.empty() ? dirSnake :  directionsBuffer.back();
+
+    // Trying to go in the opposite direction
+    if (previousDir == GAUCHE && dir == DROITE)
+        return;
+    if (previousDir == DROITE && dir == GAUCHE)
+        return;
+    if (previousDir == HAUT && dir == BAS)
+        return;
+    if (previousDir == BAS && dir == HAUT)
+        return;
+
+    directionsBuffer.push(dir);
 }
 
 void Jeu::addRandomWall() {

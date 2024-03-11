@@ -73,11 +73,11 @@ void SnakeWindow::paintEvent(QPaintEvent *) {
 void SnakeWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Left)
         jeu.setDirection(GAUCHE);
-    else if (event->key() == Qt::Key_Right)
+    if (event->key() == Qt::Key_Right)
         jeu.setDirection(DROITE);
-    else if (event->key() == Qt::Key_Up)
+    if (event->key() == Qt::Key_Up)
         jeu.setDirection(HAUT);
-    else if (event->key() == Qt::Key_Down)
+    if (event->key() == Qt::Key_Down)
         jeu.setDirection(BAS);
     update();
 }
