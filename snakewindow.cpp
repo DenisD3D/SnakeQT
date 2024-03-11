@@ -41,7 +41,7 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags): QFrame(pParen
     const int largeurCase = pixmapMur.width();
     const int hauteurCase = pixmapMur.height();
 
-    resize(jeu.getNbCasesX() * largeurCase, jeu.getNbCasesY() * hauteurCase + HEADER_HEIGHT);
+    setFixedSize(jeu.getNbCasesX() * largeurCase, jeu.getNbCasesY() * hauteurCase + HEADER_HEIGHT);
 }
 
 void SnakeWindow::paintEvent(QPaintEvent *) {
