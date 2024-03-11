@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/mur.bmp</file>
+        <file>images/snake_corps.png</file>
+        <file>images/snake_tete.png</file>
+    </qresource>
+</RCC>
