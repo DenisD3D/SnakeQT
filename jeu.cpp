@@ -158,3 +158,31 @@ bool Jeu::posValide(const Position &pos) const {
 void Jeu::setDirection(Direction dir) {
     dirSnake = dir;
 }
+
+void Jeu::addRandomWall() {
+    int x, y;
+    Position pos;
+
+    do {
+        x = rand() % largeur;
+        y = rand() % hauteur;
+        pos.x = x;
+        pos.y = y;
+    } while (terrain[y * largeur + x] != VIDE || !posValide(pos));
+
+    terrain[y * largeur + x] = MUR;
+}
+
+void Jeu::removeRandomWall() {
+    int x, y;
+    Position pos;
+
+    do {
+        x = rand() % largeur;
+        y = rand() % hauteur;
+        pos.x = x;
+        pos.y = y;
+    } while (terrain[y * largeur + x] != MUR);
+
+    terrain[y * largeur + x] = VIDE;
+}

@@ -5,19 +5,23 @@
 #include <QtWidgets/QtWidgets>
 #include "jeu.hpp"
 
-class SnakeWindow : public QFrame
-{
-  protected:
+class SnakeWindow : public QFrame {
+protected:
     Jeu jeu;
     QPixmap pixmapCorps, pixmapTete, pixmapMur;
 
-  public:
-    SnakeWindow(QWidget *pParent=nullptr, Qt::WindowFlags flags=Qt::WindowFlags());
+public:
+    SnakeWindow(QWidget *pParent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
+
     void handleTimer();
 
-  protected:
+protected:
     void paintEvent(QPaintEvent *);
-    void keyPressEvent(QKeyEvent *);
-};
 
+    void keyPressEvent(QKeyEvent *);
+
+    void addWall();
+
+    void removeWall();
+};
 #endif

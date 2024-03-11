@@ -56,6 +56,9 @@ public:
 
     // Modifie la direction
     void setDirection(Direction);
+
+    void addRandomWall();
+    void removeRandomWall();
 };
 
 #endif
