@@ -35,6 +35,11 @@ jobs:
       - name: Create Build Directory
         run: mkdir build
 
+      - name: Patch zlib CMakeLists.txt
+        if: runner.os == 'Windows'
+        run: |
+          sed -i 's|INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}"|INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}"|g' minizip-ng/third_party/zlib/CMakeLists.txt
+
       - name: Configure CMake
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
 
@@ -46,17 +51,51 @@ jobs:
         run: |
           sudo wget -O /tmp/cqtdeployer.deb https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2351/CQtDeployer_1.6.2351.ec4840f_Linux_x86_64.deb
           sudo dpkg -i /tmp/cqtdeployer.deb
-          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif
+          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif -targetDir FileDistributionKit
         shell: bash
+
+      - uses: actions/upload-artifact@v3
+        if: runner.os == 'Linux'
+        with:
+          name: Linux_Files
+          path: FileDistributionKit/*
+
+      - name: Deploy (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo wget -O /tmp/cqtdeployer.deb https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2351/CQtDeployer_1.6.2351.ec4840f_Linux_x86_64.deb
+          sudo dpkg -i /tmp/cqtdeployer.deb
+          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif -targetDir InstallerDistributionKit
+        shell: bash
+
+      - uses: actions/upload-artifact@v3
+        if: runner.os == 'Linux'
+        with:
+          name: Linux_Installer
+          path: InstallerDistributionKit/*
 
       - name: Deploy (Windows)
         if: runner.os == 'Windows'
         run: |
           choco install cqtdeployer
-          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif
+          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT -targetDir FileDistributionKit
         shell: pwsh
 
       - uses: actions/upload-artifact@v3
+        if: runner.os == 'Windows'
         with:
-          name: ${{ matrix.os }}
-          path: DistributionKit/*
+          name: Windows_Files
+          path: FileDistributionKit/*
+
+      - name: Deploy (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install cqtdeployer
+          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif -targetDir InstallerDistributionKit
+        shell: pwsh
+
+      - uses: actions/upload-artifact@v3
+        if: runner.os == 'Windows'
+        with:
+          name: Windows_Files
+          path: InstallerDistributionKit/*
