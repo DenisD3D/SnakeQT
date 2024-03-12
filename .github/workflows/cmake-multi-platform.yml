@@ -24,7 +24,7 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-20.04, windows-latest]
         build_type: [Release]
         c_compiler: [gcc, clang, cl]
         include:
@@ -85,13 +85,13 @@ jobs:
         sudo apt-get install fuse libfuse2
         wget -q https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-        ./linuxdeployqt-continuous-x86_64.AppImage ${{github.workspace}}/build/ProjetPOOA -qmldir=${{github.workspace}}/src
+        ./linuxdeployqt-continuous-x86_64.AppImage ${{ steps.strings.outputs.build-output-dir }}/ProjetPOOA
       shell: bash
 
     - name: Deploy (Windows)
       if: runner.os == 'Windows'
       run: |
-        cd ${{github.workspace}}/build/Release
+        cd ${{ steps.strings.outputs.build-output-dir }}/Release
         windeployqt.exe ProjetPOOA.exe
       shell: bash
       
