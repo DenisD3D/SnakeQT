@@ -43,10 +43,11 @@ jobs:
       - name: Deploy (Linux)
         if: runner.os == 'Linux'
         run: |
+          chmod +x build/SnakeQT
           sudo apt-get install fuse libfuse2
           wget -q https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-          ./linuxdeployqt-continuous-x86_64.AppImage build/SnakeQT
+          ./linuxdeployqt-continuous-x86_64.AppImage ${{ github.workspace }}/build/SnakeQT -verbose=2
         shell: bash
 
       - name: Deploy (Windows)
