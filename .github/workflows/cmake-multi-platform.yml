@@ -82,6 +82,7 @@ jobs:
     - name: Deploy (Linux)
       if: runner.os == 'Linux'
       run: |
+        sudo apt-get install fuse libfuse2
         wget -q https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
         chmod a+x linuxdeployqt-continuous-x86_64.AppImage
         ./linuxdeployqt-continuous-x86_64.AppImage ${{github.workspace}}/build/ProjetPOOA -qmldir=${{github.workspace}}/src
@@ -90,7 +91,7 @@ jobs:
     - name: Deploy (Windows)
       if: runner.os == 'Windows'
       run: |
-        cd ${{github.workspace}}/build
+        cd ${{github.workspace}}/build/Release
         windeployqt.exe ProjetPOOA.exe
       shell: bash
       
