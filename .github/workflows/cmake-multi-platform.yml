@@ -12,14 +12,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Release]
         include:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
+            build_type: Release
           - os: ubuntu-20.04
             c_compiler: gcc
             cpp_compiler: g++
+            build_type: Release
 
     steps:
       - uses: actions/checkout@v3
@@ -43,21 +44,29 @@ jobs:
       - name: Deploy (Linux)
         if: runner.os == 'Linux'
         run: |
-          chmod +x build/SnakeQT
+          chmod +x ${{ github.workspace }}/build/SnakeQT
           sudo apt-get install fuse libfuse2
           wget -q https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
           ./linuxdeployqt-continuous-x86_64.AppImage ${{ github.workspace }}/build/SnakeQT -verbose=2
         shell: bash
 
+      - name: Deploy (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo wget -O /tmp/cqtdeployer.deb https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2351/CQtDeployer_1.6.2351.ec4840f_Linux_x86_64.deb
+          sudo dpkg -i /tmp/cqtdeployer.deb
+          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif
+        shell: bash
+
       - name: Deploy (Windows)
         if: runner.os == 'Windows'
         run: |
-          cd build
-          windeployqt.exe SnakeQT.exe
-        shell: bash
+          choco install cqtdeployer
+          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif
+        shell: pwsh
 
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}
-          path: build/*
+          path: DistributionKit/*
