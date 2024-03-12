@@ -14,10 +14,10 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
+            c_compiler: gcc
+            cpp_compiler: g++
             build_type: Release
-          - os: ubuntu-20.04
+          - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
             build_type: Release
@@ -40,16 +40,6 @@ jobs:
 
       - name: Build with CMake
         run: cmake --build build --config ${{ matrix.build_type }}
-
-      - name: Deploy (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          chmod +x ${{ github.workspace }}/build/SnakeQT
-          sudo apt-get install fuse libfuse2
-          wget -q https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-          chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-          ./linuxdeployqt-continuous-x86_64.AppImage ${{ github.workspace }}/build/SnakeQT -verbose=2
-        shell: bash
 
       - name: Deploy (Linux)
         if: runner.os == 'Linux'
