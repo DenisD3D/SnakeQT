@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/mur.bmp</file>
-        <file>images/snake_corps.png</file>
-        <file>images/snake_tete.png</file>
+        <file>images/body.png</file>
+        <file>images/head.png</file>
+        <file>images/ground.png</file>
+        <file>images/wall.bmp</file>
     </qresource>
 </RCC>

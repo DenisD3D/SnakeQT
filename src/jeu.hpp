@@ -4,7 +4,7 @@
 #include <queue>
 #include <list>
 
-typedef enum { VIDE, MUR } Case;
+#include "map.hpp"
 
 typedef enum { GAUCHE, DROITE, HAUT, BAS } Direction;
 
@@ -23,14 +23,15 @@ public:
 
 class Jeu {
 protected:
-    Case *terrain;
-    int largeur, hauteur; // Nombre de cases en largeur et en hauteur
+    Map map;
     std::list<Position> snake;
     Direction dirSnake;
     std::queue<Direction> directionsBuffer;
 
 public:
     Jeu();
+
+    explicit Jeu(const Map &);
 
     Jeu(const Jeu &);
 
@@ -48,7 +49,7 @@ public:
     int getNbCasesY() const;
 
     // Retourne la case ? une position donn?e
-    Case getCase(const Position &) const;
+    TileType getCase(const Position &) const;
 
     // Retourne la liste des ?l?ments du serpent en lecture seule
     const std::list<Position> &getSnake() const;
@@ -58,9 +59,6 @@ public:
 
     // Modifie la direction
     void setDirection(Direction);
-
-    void addRandomWall();
-    void removeRandomWall();
 };
 
 #endif
