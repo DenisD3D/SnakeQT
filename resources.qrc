@@ -4,5 +4,6 @@
         <file>images/head.png</file>
         <file>images/ground.png</file>
         <file>images/wall.bmp</file>
+        <file>images/apple.png</file>
     </qresource>
 </RCC>

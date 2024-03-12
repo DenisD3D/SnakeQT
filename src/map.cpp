@@ -39,6 +39,7 @@ Map::Map(const QFileInfo &file) {
     // Load default tiles types
     types["ground"] = {GROUND, QPixmap(":/images/ground.png")};
     types["wall"] = {WALL, QPixmap(":/images/wall.bmp")};
+    types["apple"] = {APPLE, QPixmap(":/images/apple.png")};
 
     // Get map tiles types
     const QDomNodeList map_types = root.elementsByTagName("type");

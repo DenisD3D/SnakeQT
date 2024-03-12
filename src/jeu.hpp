@@ -3,6 +3,7 @@
 
 #include <queue>
 #include <list>
+#include <random>
 
 #include "map.hpp"
 
@@ -27,6 +28,8 @@ protected:
     std::list<Position> snake;
     Direction dirSnake;
     std::queue<Direction> directionsBuffer;
+    Position posApple = Position(-1, -1);
+    std::mt19937 gen;
 
 public:
     Jeu();
@@ -59,6 +62,10 @@ public:
 
     // Modifie la direction
     void setDirection(Direction);
+
+    Position &getPosApple();
+
+    Map &getMap();
 };
 
 #endif

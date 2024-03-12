@@ -23,14 +23,20 @@ bool Position::operator!=(const Position &pos) const {
 
 Jeu::Jeu() {
     dirSnake = DROITE;
+    std::random_device rd;
+    gen.seed(rd());
 }
 
 Jeu::Jeu(const Map &map): map(map) {
     dirSnake = DROITE;
+    std::random_device rd;
+    gen.seed(rd());
 }
 
 Jeu::Jeu(const Jeu &jeu): map(jeu.map), snake(jeu.snake) {
     dirSnake = jeu.dirSnake;
+    std::random_device rd;
+    gen.seed(rd());
 }
 
 Jeu::~Jeu() {
@@ -60,6 +66,13 @@ bool Jeu::init() {
         snake.push_back(posTete);
     }
 
+
+    std::uniform_int_distribution<> distr(0, map.width - 1);
+    do {
+        posApple.x = distr(gen);
+        posApple.y = distr(gen);
+    } while (!posValide(posApple));
+
     return true;
 }
 
@@ -78,8 +91,21 @@ void Jeu::evolue() {
     posTest.y = snake.front().y + depY[dirSnake];
 
     if (posValide(posTest)) {
-        snake.pop_back();
+        if (posTest == posApple) {
+            std::uniform_int_distribution<> distr(0, map.width - 1);
+            do {
+                posApple.x = distr(gen);
+                posApple.y = distr(gen);
+            } while (!posValide(posApple));
+            // Don't remove the last element of the snake to make it grow
+        } else {
+            // Remove the last element of the snake to make it move
+            snake.pop_back();
+        }
         snake.push_front(posTest);
+    } else {
+        // Game over
+        // snake.clear();
     }
 }
 
@@ -134,4 +160,12 @@ void Jeu::setDirection(const Direction dir) {
 
     // Add direction to buffer, unpacked in evolue()
     directionsBuffer.push(dir);
+}
+
+Position &Jeu::getPosApple() {
+    return posApple;
+}
+
+Map &Jeu::getMap() {
+    return map;
 }
