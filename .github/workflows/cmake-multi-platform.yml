@@ -72,8 +72,11 @@ jobs:
       - name: Deploy (Windows)
         if: runner.os == 'Windows'
         run: |
-          choco install cqtdeployer
-          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT -targetDir FileDistributionKit
+          $url = "https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2351/CQtDeployer_1.6.2351.ec4840f_Windows_AMD64.zip"
+          $output = "cqtdeployer.zip"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Expand-Archive -Path $output -DestinationPath .\cqtdeployer
+          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT -targetDir FileDistributionKit
         shell: pwsh
 
       - uses: actions/upload-artifact@v3
@@ -85,8 +88,11 @@ jobs:
       - name: Deploy (Windows)
         if: runner.os == 'Windows'
         run: |
-          choco install cqtdeployer
-          cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif -targetDir InstallerDistributionKit
+          $url = "https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2351/CQtDeployer_1.6.2351.ec4840f_Windows_AMD64.zip"
+          $output = "cqtdeployer.zip"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Expand-Archive -Path $output -DestinationPath .\cqtdeployer
+          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif -targetDir InstallerDistributionKit
         shell: pwsh
 
       - uses: actions/upload-artifact@v3
