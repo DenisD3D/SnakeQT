@@ -31,7 +31,6 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: '5.15.2'
-          tools: 'tools_ifw'
 
       - name: Create Build Directory
         run: mkdir build
@@ -91,7 +90,8 @@ jobs:
         run: |
           Get-ChildItem -Path . -Recurse
           echo "%GITHUB_WORKSPACE%/Qt/Tools/QtInstallerFramework/4.7/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit -verbose 3
+          Set-Location -Path cqtdeployer
+          .\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit -verbose 3
         shell: pwsh
 
       - uses: actions/upload-artifact@v4
