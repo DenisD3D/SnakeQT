@@ -28,7 +28,7 @@ jobs:
           submodules: 'recursive'
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@not-ready-v4-not-ready
+        uses: jurplel/install-qt-action@v3
         with:
           version: '5.15.2'
           tools: 'tools_ifw'
@@ -89,6 +89,8 @@ jobs:
       - name: Deploy (Windows)
         if: runner.os == 'Windows'
         run: |
+          Get-ChildItem -Path . -Recurse
+          echo "%GITHUB_WORKSPACE%/Qt/Tools/QtInstallerFramework/4.7/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit -verbose 3
         shell: pwsh
 
