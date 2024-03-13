@@ -23,12 +23,12 @@ jobs:
             build_type: Release
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: '5.15.2'
           tools: 'tools_ifw'
@@ -50,7 +50,7 @@ jobs:
           cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT -targetDir FileDistributionKit
         shell: bash
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: runner.os == 'Linux'
         with:
           name: Linux_Files
@@ -64,7 +64,7 @@ jobs:
           cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT qif -targetDir InstallerDistributionKit
         shell: bash
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: runner.os == 'Linux'
         with:
           name: Linux_Installer
@@ -80,7 +80,7 @@ jobs:
           .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe -targetDir FileDistributionKit
         shell: pwsh
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
           name: Windows_Files
@@ -92,7 +92,7 @@ jobs:
           .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit -verbose 3
         shell: pwsh
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
           name: Windows_Files
