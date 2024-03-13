@@ -36,7 +36,7 @@ jobs:
         run: mkdir build
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} -DZLIB_TAG=develop
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} -DZLIB_TAG=develop -MZ_FORCE_FETCH_LIBS=ON
 
       - name: Build with CMake
         run: cmake --build build --config ${{ matrix.build_type }}
