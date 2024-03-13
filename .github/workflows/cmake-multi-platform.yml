@@ -89,7 +89,7 @@ jobs:
       - name: Deploy (Windows)
         if: runner.os == 'Windows'
         run: |
-          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit
+          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit -verbose 3
         shell: pwsh
 
       - uses: actions/upload-artifact@v3
