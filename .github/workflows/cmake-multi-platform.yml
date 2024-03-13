@@ -76,7 +76,7 @@ jobs:
           $output = "cqtdeployer.zip"
           Invoke-WebRequest -Uri $url -OutFile $output
           Expand-Archive -Path $output -DestinationPath .\cqtdeployer
-          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT.exe -targetDir FileDistributionKit
+          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe -targetDir FileDistributionKit
         shell: pwsh
 
       - uses: actions/upload-artifact@v3
@@ -92,7 +92,7 @@ jobs:
           $output = "cqtdeployer.zip"
           Invoke-WebRequest -Uri $url -OutFile $output
           Expand-Archive -Path $output -DestinationPath .\cqtdeployer
-          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/SnakeQT.exe qif -targetDir InstallerDistributionKit
+          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit
         shell: pwsh
 
       - uses: actions/upload-artifact@v3
