@@ -88,11 +88,7 @@ jobs:
       - name: Deploy (Windows)
         if: runner.os == 'Windows'
         run: |
-          $url = "https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2351/CQtDeployer_1.6.2351.ec4840f_Windows_AMD64.zip"
-          $output = "cqtdeployer.zip"
-          Invoke-WebRequest -Uri $url -OutFile $output
-          Expand-Archive -Path $output -DestinationPath .\cqtdeployer
-          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit -Force
+          .\cqtdeployer\cqtdeployer -bin ${{ github.workspace }}/build/Release/SnakeQT.exe qif -targetDir InstallerDistributionKit
         shell: pwsh
 
       - uses: actions/upload-artifact@v3
