@@ -56,7 +56,7 @@ void SnakeWindow::paintEvent(QPaintEvent *) {
 
     // Dessine la pomme
     if (jeu.posValide(jeu.getPosApple()))
-        painter.drawPixmap(jeu.getPosApple().x * TEXTURE_SIZE, jeu.getPosApple().y * TEXTURE_SIZE + HEADER_HEIGHT, jeu.getMap().types["apple"].texture);
+        painter.drawPixmap(jeu.getPosApple().x * TEXTURE_SIZE, jeu.getPosApple().y * TEXTURE_SIZE + HEADER_HEIGHT, jeu.getMap().apple_texture);
 }
 
 /**

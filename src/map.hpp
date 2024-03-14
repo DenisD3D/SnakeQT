@@ -5,7 +5,7 @@
 
 #define DEFAULT_TILE_TYPES_COUNT 1
 
-typedef enum { GROUND, WALL, APPLE } TerrainType;
+typedef enum { GROUND, WALL } TerrainType;
 
 typedef enum { GAUCHE, DROITE, HAUT, BAS } Direction;
 
@@ -20,7 +20,7 @@ public:
     int init_x = 1, init_y = 1;
     int init_snake_length = 5;
     Direction init_direction = DROITE;
-    QPixmap snake_head_texture, snake_body_texture;
+    QPixmap snake_head_texture, snake_body_texture, apple_texture;
 
     QHash<QString, TileType> types;
     TileType *tiles;

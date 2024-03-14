@@ -31,10 +31,20 @@ Map::Map(const QFileInfo &file) {
     QDomDocument doc;
     doc.setContent(map_data);
 
-    // Get map dimensions
+    // Get map settings
     const QDomElement root = doc.documentElement();
     width = root.attribute("width").toInt();
     height = root.attribute("height").toInt();
+    if (root.hasAttribute("apple_texture")) {
+        QByteArray texture_data;
+        zip_file.extractFile(root.attribute("apple_texture"), texture_data);
+        if (!apple_texture.loadFromData(texture_data)) {
+            qDebug() << "Map: could not load texture";
+            return;
+        }
+    } else {
+        apple_texture = QPixmap(":/images/apple.png");
+    }
 
     // Get snake settings
     const QDomNodeList snakeElements = root.elementsByTagName("snake");
@@ -83,7 +93,6 @@ Map::Map(const QFileInfo &file) {
     // Load default tiles types
     types["ground"] = {GROUND, QPixmap(":/images/ground.png")};
     types["wall"] = {WALL, QPixmap(":/images/wall.bmp")};
-    types["apple"] = {APPLE, QPixmap(":/images/apple.png")};
 
     // Get map tiles types
     const QDomNodeList map_types = root.elementsByTagName("type");
@@ -96,8 +105,6 @@ Map::Map(const QFileInfo &file) {
             type.type = GROUND;
         } else if (type_str == "wall") {
             type.type = WALL;
-        } else if (type_str == "apple") {
-            type.type = APPLE;
         } else {
             qDebug() << "Map: unknown tile type" << type_str;
             return;
@@ -135,6 +142,7 @@ Map::Map(const Map &map) {
     init_direction = map.init_direction;
     snake_head_texture = map.snake_head_texture;
     snake_body_texture = map.snake_body_texture;
+    apple_texture = map.apple_texture;
     tiles = new TileType[width * height];
     for (int i = 0; i < width * height; i++) {
         tiles[i] = map.tiles[i];
@@ -158,6 +166,7 @@ Map &Map::operator=(const Map &other) {
         init_direction = other.init_direction;
         snake_head_texture = other.snake_head_texture;
         snake_body_texture = other.snake_body_texture;
+        apple_texture = other.apple_texture;
 
         tiles = new TileType[width * height];
         for (int i = 0; i < width * height; i++) {
