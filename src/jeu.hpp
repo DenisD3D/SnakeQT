@@ -7,8 +7,6 @@
 
 #include "map.hpp"
 
-typedef enum { GAUCHE, DROITE, HAUT, BAS } Direction;
-
 class Position {
 public:
     int x{}, y{};

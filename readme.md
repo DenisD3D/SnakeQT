@@ -8,7 +8,7 @@
 ```bash
 git clone --recurse-submodules https://github.com/DenisD3D/SnakeQT.git
 ```
-3. Run cmake in the root directory of the project.
+4. Run cmake in the root directory of the project.
 ```bash
 cmake -S . -B build
 cmake --build build

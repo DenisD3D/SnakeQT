@@ -48,10 +48,10 @@ void SnakeWindow::paintEvent(QPaintEvent *) {
     const list<Position> &snake = jeu.getSnake();
     if (!snake.empty()) {
         const Position &posTete = snake.front();
-        painter.drawPixmap(posTete.x * TEXTURE_SIZE, posTete.y * TEXTURE_SIZE + HEADER_HEIGHT, pixmapTete);
+        painter.drawPixmap(posTete.x * TEXTURE_SIZE, posTete.y * TEXTURE_SIZE + HEADER_HEIGHT, jeu.getMap().snake_head_texture);
 
         for (auto itSnake = ++snake.begin(); itSnake != snake.end(); ++itSnake)
-            painter.drawPixmap(itSnake->x * TEXTURE_SIZE, itSnake->y * TEXTURE_SIZE + HEADER_HEIGHT, pixmapCorps);
+            painter.drawPixmap(itSnake->x * TEXTURE_SIZE, itSnake->y * TEXTURE_SIZE + HEADER_HEIGHT, jeu.getMap().snake_body_texture);
     }
 
     // Dessine la pomme

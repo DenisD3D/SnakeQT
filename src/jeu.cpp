@@ -56,15 +56,15 @@ Jeu &Jeu::operator=(const Jeu &jeu) {
  * @return true if the game is successfully initialized
  */
 bool Jeu::init() {
-    constexpr int longueurSerpent = 5;
     snake.clear();
 
     Position posTete;
-    posTete.x = 1;
-    posTete.y = 1;
-    for (int i = 0; i < longueurSerpent; i++) {
+    posTete.x = map.init_x;
+    posTete.y = map.init_y;
+    for (int i = 0; i < map.init_snake_length; i++) {
         snake.push_back(posTete);
     }
+    dirSnake = map.init_direction;
 
 
     std::uniform_int_distribution<> distr(0, map.width - 1);

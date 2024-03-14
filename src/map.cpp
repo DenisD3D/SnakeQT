@@ -36,6 +36,50 @@ Map::Map(const QFileInfo &file) {
     width = root.attribute("width").toInt();
     height = root.attribute("height").toInt();
 
+    // Get snake settings
+    const QDomNodeList snakeElements = root.elementsByTagName("snake");
+    if (!snakeElements.isEmpty()) {
+        const QDomElement snake = snakeElements.at(0).toElement();
+        init_x = snake.attribute("init_x").toInt();
+        init_y = snake.attribute("init_y").toInt();
+        init_snake_length = snake.attribute("init_length").toInt();
+        const QString direction = snake.attribute("init_direction");
+        if (direction == "left") {
+            init_direction = GAUCHE;
+        } else if (direction == "right") {
+            init_direction = DROITE;
+        } else if (direction == "up") {
+            init_direction = HAUT;
+        } else if (direction == "down") {
+            init_direction = BAS;
+        } else {
+            qDebug() << "Map: unknown direction" << direction;
+            return;
+        }
+
+        if (snake.hasAttribute("head_texture")) {
+            QByteArray texture_data;
+            zip_file.extractFile(snake.attribute("head_texture"), texture_data);
+            if (!snake_head_texture.loadFromData(texture_data)) {
+                qDebug() << "Map: could not load texture";
+                return;
+            }
+        } else {
+            snake_head_texture = QPixmap(":/images/head.png");
+        }
+
+        if (snake.hasAttribute("body_texture")) {
+            QByteArray texture_data;
+            zip_file.extractFile(snake.attribute("body_texture"), texture_data);
+            if (!snake_body_texture.loadFromData(texture_data)) {
+                qDebug() << "Map: could not load texture";
+                return;
+            }
+        } else {
+            snake_body_texture = QPixmap(":/images/body.png");
+        }
+    }
+
     // Load default tiles types
     types["ground"] = {GROUND, QPixmap(":/images/ground.png")};
     types["wall"] = {WALL, QPixmap(":/images/wall.bmp")};
@@ -85,6 +129,12 @@ Map::Map(const Map &map) {
     width = map.width;
     height = map.height;
     types = map.types;
+    init_x = map.init_x;
+    init_y = map.init_y;
+    init_snake_length = map.init_snake_length;
+    init_direction = map.init_direction;
+    snake_head_texture = map.snake_head_texture;
+    snake_body_texture = map.snake_body_texture;
     tiles = new TileType[width * height];
     for (int i = 0; i < width * height; i++) {
         tiles[i] = map.tiles[i];
@@ -102,6 +152,12 @@ Map &Map::operator=(const Map &other) {
         width = other.width;
         height = other.height;
         types = other.types;
+        init_x = other.init_x;
+        init_y = other.init_y;
+        init_snake_length = other.init_snake_length;
+        init_direction = other.init_direction;
+        snake_head_texture = other.snake_head_texture;
+        snake_body_texture = other.snake_body_texture;
 
         tiles = new TileType[width * height];
         for (int i = 0; i < width * height; i++) {
