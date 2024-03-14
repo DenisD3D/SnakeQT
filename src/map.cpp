@@ -124,6 +124,11 @@ Map::Map(const QFileInfo &file) {
 
     // Get map tiles
     tiles = new TileType[width * height];
+    if (root.hasAttribute("default_tile")) {
+        std::fill_n(tiles, width * height, types[root.attribute("default_tile")]);
+    } else {
+        std::fill_n(tiles, width * height, types["ground"]);
+    }
     const QDomNodeList map_tiles = root.elementsByTagName("tile");
     for (int i = 0; i < map_tiles.size(); i++) {
         QDomElement tile = map_tiles.at(i).toElement();
