@@ -84,14 +84,16 @@ void Jeu::evolue() {
 
     Position posTest;
 
-    int depX[] = {-1, 1, 0, 0};
-    int depY[] = {0, 0, -1, 1};
+    constexpr int depX[] = {-1, 1, 0, 0};
+    constexpr int depY[] = {0, 0, -1, 1};
 
-    posTest.x = snake.front().x + depX[dirSnake];
-    posTest.y = snake.front().y + depY[dirSnake];
+    posTest.x = (snake.front().x + depX[dirSnake] + map.width) % map.width;
+    posTest.y = (snake.front().y + depY[dirSnake] + map.height) % map.height;
 
     if (posValide(posTest)) {
-        if (posTest == posApple) {
+        snake.push_front(posTest); // Add the new head
+
+        if (posTest == posApple) { // The snake eats the apple, place a new apple
             std::uniform_int_distribution<> distr(0, map.width - 1);
             do {
                 posApple.x = distr(gen);
@@ -102,7 +104,6 @@ void Jeu::evolue() {
             // Remove the last element of the snake to make it move
             snake.pop_back();
         }
-        snake.push_front(posTest);
     } else {
         // Game over
         // snake.clear();
@@ -127,14 +128,16 @@ const list<Position> &Jeu::getSnake() const {
 }
 
 bool Jeu::posValide(const Position &pos) const {
-    if (pos.x >= 0 && pos.x < map.width && pos.y >= 0 && pos.y < map.height
-        && map.tiles[pos.y * map.width + pos.x].type == GROUND) {
-        auto itSnake = snake.begin();
-        while (itSnake != snake.end() && *itSnake != pos)
-            ++itSnake;
-        return (itSnake == snake.end());
-    }
-    return false;
+    if (pos.x < 0 || pos.x >= map.width || pos.y < 0 || pos.y >= map.height) // Out of bounds
+        return false;
+
+    if (map.tiles[pos.y * map.width + pos.x].type != GROUND)
+        return false;
+
+    auto itSnake = snake.begin();
+    while (itSnake != snake.end() && *itSnake != pos)
+        ++itSnake;
+    return (itSnake == snake.end()); // Is the position free of snake ?
 }
 
 /**
