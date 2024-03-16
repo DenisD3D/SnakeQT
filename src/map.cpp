@@ -24,13 +24,13 @@ Map::Map() {
 
 Map::Map(const QString &absolute_file_path, const bool create_map): file(absolute_file_path) {
     default_tile = "ground";
-    apple_texture = QPixmap(":/images/apple.png");
-    snake_head_texture.load(":/images/head.png");
-    snake_body_texture.load(":/images/body.png");
+    apple_texture.load(":/images/apple.png");
+    snake_head_texture.load(":/images/sneak_head.png");
+    snake_body_texture.load(":/images/sneak_body.png");
 
     // Load default tiles types
     types["ground"] = {GROUND, QPixmap(":/images/ground.png"), true};
-    types["wall"] = {WALL, QPixmap(":/images/wall.bmp"), true};
+    types["wall"] = {WALL, QPixmap(":/images/wall.png"), true};
 
     if (create_map) {
         tiles = new TileType *[width * height];

@@ -44,7 +44,7 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
     connect(openMapPlayAction, &QAction::triggered, this, [this] {
         const auto fileName = QFileDialog::getOpenFileName(this, tr("Open Map"), QString(), tr("Map Files (*.skm)"));
         if (!fileName.isEmpty()) {
-            std::cout << "Opening map: " << fileName.toStdString() << std::endl;
+            qDebug() << "Opening map: " << fileName;
             gameScreen = new GameScreen(this, fileName);
             stackedWidget->addWidget(gameScreen);
             stackedWidget->setCurrentWidget(gameScreen);

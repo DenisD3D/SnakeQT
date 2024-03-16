@@ -11,6 +11,7 @@ public:
         const auto layout = new QVBoxLayout(this);
 
         const auto startButton = new QPushButton("Start Game", this);
+        startButton->setDisabled(true);
         const auto exitButton = new QPushButton("Exit", this);
 
         layout->addWidget(startButton);

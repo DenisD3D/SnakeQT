@@ -11,7 +11,7 @@ GameScreen::GameScreen(QWidget *parent, const QString &file_info): QWidget(paren
     gameArea = new GameArea(jeu.getMap(), jeu.getSnake(), jeu.getApplePos(), false, this);
 
     auto *layout = new QVBoxLayout;
-    auto *mapNameLabel = new QLabel(jeu.getMap().getAuthor() + " by " + jeu.getMap().getAuthor(), this);
+    auto *mapNameLabel = new QLabel(jeu.getMap().getName() + " by " + jeu.getMap().getAuthor(), this);
     auto *scoreLabel = new QLabel("Score: 0", this);
 
     layout->addWidget(mapNameLabel);

@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/body.png</file>
-        <file>images/head.png</file>
+        <file>images/sneak_body.png</file>
+        <file>images/sneak_head.png</file>
         <file>images/ground.png</file>
-        <file>images/wall.bmp</file>
+        <file>images/wall.png</file>
         <file>images/apple.png</file>
     </qresource>
 </RCC>

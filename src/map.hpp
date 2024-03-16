@@ -118,19 +118,37 @@ public:
     void setAuthor(const QString &a) { author = a; }
     void setInitDirection(const Direction d) { init_direction = d; }
 
-    void setSnakeHeadTexture(const QPixmap &texture) {
+    void setSnakeHeadTexture(const QPixmap *texture) {
+        if (texture == nullptr) {
+            has_custom_snake_head_texture = false;
+            snake_head_texture.load(":/images/sneak_head.png");
+            return;
+        }
+
         has_custom_snake_head_texture = true;
-        snake_head_texture = texture;
+        snake_head_texture = *texture;
     }
 
-    void setSnakeBodyTexture(const QPixmap &texture) {
+    void setSnakeBodyTexture(const QPixmap *texture) {
+        if (texture == nullptr) {
+            has_custom_snake_body_texture = false;
+            snake_body_texture.load(":/images/sneak_body.png");
+            return;
+        }
+
         has_custom_snake_body_texture = true;
-        snake_body_texture = texture;
+        snake_body_texture = *texture;
     }
 
-    void setAppleTexture(const QPixmap &texture) {
+    void setAppleTexture(const QPixmap *texture) {
+        if (texture == nullptr) {
+            has_custom_apple_texture = false;
+            apple_texture.load(":/images/apple.png");
+            return;
+        }
+
         has_custom_apple_texture = true;
-        apple_texture = texture;
+        apple_texture = *texture;
     }
 
     void setDefaultTile(const QString &type) { default_tile = type; }

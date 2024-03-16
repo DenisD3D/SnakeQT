@@ -219,6 +219,7 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
     customTextureTable->verticalHeader()->hide();
     customTextureTable->setSelectionMode(QAbstractItemView::NoSelection);
     customTextureTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    customTextureTable->setContextMenuPolicy(Qt::CustomContextMenu);
     customTextureTable->setFocusPolicy(Qt::NoFocus);
     customTextureTable->setMinimumWidth(150);
     customTextureTable->setMaximumHeight(150);
@@ -237,7 +238,7 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
     appleTexture->setIcon(QIcon(map.getAppleTexture()));
     customTextureTable->setItem(2, 0, appleTexture);
 
-    connect(customTextureTable, &CustomTableWidget::doubleClicked,
+    connect(customTextureTable, &QTableWidget::doubleClicked,
             [this, customTextureTable](const QModelIndex &index) {
                 const QString texturePath = QFileDialog::getOpenFileName(this, "Open Image", "",
                                                                          "Image Files (*.png *.jpg *.bmp)");
@@ -250,13 +251,13 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
 
                 switch (index.row()) {
                     case 0:
-                        map.setSnakeHeadTexture(newTexture);
+                        map.setSnakeHeadTexture(&newTexture);
                         break;
                     case 1:
-                        map.setSnakeBodyTexture(newTexture);
+                        map.setSnakeBodyTexture(&newTexture);
                         break;
                     case 2:
-                        map.setAppleTexture(newTexture);
+                        map.setAppleTexture(&newTexture);
                         break;
                     default:
                         break;
@@ -265,6 +266,36 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
                 auto *item = customTextureTable->item(index.row(), 0);
                 item->setIcon(QIcon(newTexture));
                 gameArea->update();
+            });
+    connect(customTextureTable, &QTableWidget::customContextMenuRequested,
+            [this, customTextureTable](const QPoint &pos) {
+                QMenu contextMenu;
+
+                const auto action = new QAction("Reset", this);
+                connect(action, &QAction::triggered, [this, pos, customTextureTable] {
+                    auto *item = customTextureTable->itemAt(pos);
+                    switch (customTextureTable->row(item)) {
+                        case 0:
+                            map.setSnakeHeadTexture(nullptr);
+                            item->setIcon(QIcon(map.getSnakeHeadTexture()));
+                            break;
+                        case 1:
+                            map.setSnakeBodyTexture(nullptr);
+                            item->setIcon(QIcon(map.getSnakeBodyTexture()));
+                            break;
+                        case 2:
+                            map.setAppleTexture(nullptr);
+                            item->setIcon(QIcon(map.getAppleTexture()));
+                            break;
+                        default:
+                            break;
+                    }
+
+                    gameArea->update();
+                });
+                contextMenu.addAction(action);
+
+                contextMenu.exec(customTextureTable->mapToGlobal(pos));
             });
 
     auto *dafaultTypeLabel = new QLabel("Default Tile Type");
