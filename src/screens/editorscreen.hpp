@@ -48,6 +48,7 @@ class ValidatingLineEdit : public QLineEdit {
 public:
     explicit ValidatingLineEdit(QWidget *parent = nullptr) : QLineEdit(parent) {
     }
+
     explicit ValidatingLineEdit(const QString &contents, QWidget *parent = nullptr) : QLineEdit(contents, parent) {
     }
 
@@ -71,6 +72,7 @@ class EditorScreen final : public QWidget {
     Map map;
 
     CustomTableWidget *tileTypeTable = new CustomTableWidget;
+    QComboBox *defaulTypeSelect = new QComboBox();
     QString lastEditedItemText;
 
 public:

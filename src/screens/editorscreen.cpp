@@ -107,7 +107,8 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
     });
     connect(snakeInitY, &ValidatingLineEdit::invalidInput, [this, snakeInitY] {
         QMessageBox::warning(this, "Invalid Input",
-                             "Please enter a valid snake initial Y between 0 and " + QString::number(map.getHeight() - 1)
+                             "Please enter a valid snake initial Y between 0 and " + QString::number(
+                                 map.getHeight() - 1)
                              + ".");
         snakeInitY->setFocus();
     });
@@ -205,6 +206,8 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
         item->setIcon(QIcon(map.getTypes()[name].texture));
         tileTypeTable->setItem(row, 0, item);
         tileTypeTable->selectRow(row);
+
+        defaulTypeSelect->addItem(name);
     });
 
     auto *customTextureLabel = new QLabel("Custom Textures");
@@ -264,11 +267,23 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
                 gameArea->update();
             });
 
+    auto *dafaultTypeLabel = new QLabel("Default Tile Type");
+    for (auto it = types.begin(); it != types.end(); ++it) {
+        if (it.value().is_default) {
+            defaulTypeSelect->addItem(it.key());
+        }
+    }
+    connect(defaulTypeSelect, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](const int index) {
+        map.setDefaultTile(defaulTypeSelect->itemText(index));
+    });
+
     rightLayout->addWidget(tileTypeLabel);
     rightLayout->addWidget(tileTypeTable);
     rightLayout->addWidget(addTileType);
     rightLayout->addWidget(customTextureLabel);
     rightLayout->addWidget(customTextureTable);
+    rightLayout->addWidget(dafaultTypeLabel);
+    rightLayout->addWidget(defaulTypeSelect);
 
 
     auto *hLayout = new QHBoxLayout(this);
@@ -370,6 +385,11 @@ void EditorScreen::showTileSelectorContextMenu(const QPoint &pos) {
     const auto action_delete = new QAction("Delete", this);
     action_delete->setDisabled(map.getTypes()[item->text()].is_default);
     connect(action_delete, &QAction::triggered, [this, item] {
+        if (defaulTypeSelect->currentText() == item->text()) {
+            defaulTypeSelect->setCurrentText("ground");
+        }
+        defaulTypeSelect->removeItem(defaulTypeSelect->findText(item->text()));
+
         map.deleteType(item->text());
         tileTypeTable->removeRow(item->row());
         gameArea->update();
