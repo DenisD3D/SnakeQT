@@ -7,26 +7,13 @@
 
 #include "map.hpp"
 
-class Position {
-public:
-    int x{}, y{};
-
-    Position();
-
-    Position(int, int);
-
-    bool operator==(const Position &) const;
-
-    bool operator!=(const Position &) const;
-};
-
 class Jeu {
 protected:
     Map map;
     std::list<Position> snake;
     Direction dirSnake;
     std::queue<Direction> directionsBuffer;
-    Position posApple = Position(-1, -1);
+    Position applePos = Position(-1, -1);
     std::mt19937 gen;
 
 public:
@@ -44,16 +31,7 @@ public:
 
     void evolue();
 
-    // Retourne les dimensions (en nombre de cases)
-    int getNbCasesX() const;
-
-    int getNbCasesY() const;
-
-    // Retourne la case ? une position donn?e
-    TileType getCase(const Position &) const;
-
-    // Retourne la liste des ?l?ments du serpent en lecture seule
-    const std::list<Position> &getSnake() const;
+    const std::list<Position> *getSnake() const;
 
     // Indique si la case ? une position donn?e existe et est libre
     bool posValide(const Position &) const;
@@ -61,9 +39,9 @@ public:
     // Modifie la direction
     void setDirection(Direction);
 
-    Position &getPosApple();
+    const Position *getApplePos() const;
 
-    Map &getMap();
+    const Map &getMap() const;
 };
 
 #endif

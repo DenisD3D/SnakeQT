@@ -1,4 +1,4 @@
-#include "snakewindow.hpp"
+#include "screens/snakewindow.hpp"
 
 using namespace std;
 

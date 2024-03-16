@@ -1,0 +1,7 @@
+#ifndef CONSTANTS_HPP
+#define CONSTANTS_HPP
+
+#define TEXTURE_SIZE 32
+#define MAX_MAP_SIZE 30
+
+#endif //CONSTANTS_HPP

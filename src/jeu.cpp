@@ -1,25 +1,6 @@
-#include <iostream>
-#include <cassert>
-#include <QtXml>
-
 #include "jeu.hpp"
 
 using namespace std;
-
-Position::Position() = default;
-
-Position::Position(const int a, const int b) {
-    x = a;
-    y = b;
-}
-
-bool Position::operator==(const Position &pos) const {
-    return x == pos.x && y == pos.y;
-}
-
-bool Position::operator!=(const Position &pos) const {
-    return x != pos.x || y != pos.y;
-}
 
 Jeu::Jeu() {
     dirSnake = DROITE;
@@ -59,19 +40,19 @@ bool Jeu::init() {
     snake.clear();
 
     Position posTete;
-    posTete.x = map.init_x;
-    posTete.y = map.init_y;
-    for (int i = 0; i < map.init_snake_length; i++) {
+    posTete.x = map.getInitX();
+    posTete.y = map.getInitY();
+    for (int i = 0; i < map.getInitSnakeLength(); i++) {
         snake.push_back(posTete);
     }
-    dirSnake = map.init_direction;
+    dirSnake = map.getInitDirection();
 
 
-    std::uniform_int_distribution<> distr(0, map.width - 1);
+    std::uniform_int_distribution<> distr(0, map.getWidth() - 1);
     do {
-        posApple.x = distr(gen);
-        posApple.y = distr(gen);
-    } while (!posValide(posApple));
+        applePos.x = distr(gen);
+        applePos.y = distr(gen);
+    } while (!posValide(applePos));
 
     return true;
 }
@@ -87,18 +68,19 @@ void Jeu::evolue() {
     constexpr int depX[] = {-1, 1, 0, 0};
     constexpr int depY[] = {0, 0, -1, 1};
 
-    posTest.x = (snake.front().x + depX[dirSnake] + map.width) % map.width;
-    posTest.y = (snake.front().y + depY[dirSnake] + map.height) % map.height;
+    posTest.x = (snake.front().x + depX[dirSnake] + map.getWidth()) % map.getWidth();
+    posTest.y = (snake.front().y + depY[dirSnake] + map.getHeight()) % map.getHeight();
 
     if (posValide(posTest)) {
         snake.push_front(posTest); // Add the new head
 
-        if (posTest == posApple) { // The snake eats the apple, place a new apple
-            std::uniform_int_distribution<> distr(0, map.width - 1);
+        if (posTest == applePos) {
+            // The snake eats the apple, place a new apple
+            std::uniform_int_distribution<> distr(0, map.getWidth() - 1);
             do {
-                posApple.x = distr(gen);
-                posApple.y = distr(gen);
-            } while (!posValide(posApple));
+                applePos.x = distr(gen);
+                applePos.y = distr(gen);
+            } while (!posValide(applePos));
             // Don't remove the last element of the snake to make it grow
         } else {
             // Remove the last element of the snake to make it move
@@ -110,28 +92,15 @@ void Jeu::evolue() {
     }
 }
 
-int Jeu::getNbCasesX() const {
-    return map.width;
-}
-
-int Jeu::getNbCasesY() const {
-    return map.height;
-}
-
-TileType Jeu::getCase(const Position &pos) const {
-    assert(pos.x>=0 && pos.x<map.width && pos.y>=0 && pos.y<map.height);
-    return map.tiles[pos.y * map.width + pos.x];
-}
-
-const list<Position> &Jeu::getSnake() const {
-    return snake;
+const list<Position> *Jeu::getSnake() const {
+    return &snake;
 }
 
 bool Jeu::posValide(const Position &pos) const {
-    if (pos.x < 0 || pos.x >= map.width || pos.y < 0 || pos.y >= map.height) // Out of bounds
+    if (pos.x < 0 || pos.x >= map.getWidth() || pos.y < 0 || pos.y >= map.getHeight()) // Out of bounds
         return false;
 
-    if (map.tiles[pos.y * map.width + pos.x].type != GROUND)
+    if (map.getTileAt(pos).type != GROUND)
         return false;
 
     auto itSnake = snake.begin();
@@ -165,10 +134,10 @@ void Jeu::setDirection(const Direction dir) {
     directionsBuffer.push(dir);
 }
 
-Position &Jeu::getPosApple() {
-    return posApple;
+const Position *Jeu::getApplePos() const {
+    return &applePos;
 }
 
-Map &Jeu::getMap() {
+const Map &Jeu::getMap() const {
     return map;
 }

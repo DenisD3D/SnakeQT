@@ -18,9 +18,20 @@ link_directories(minizip-ng)
 
 qt5_add_resources(RESOURCE_ADDED resources.qrc)
 
-add_executable(SnakeQT src/main.cpp src/jeu.cpp src/snakewindow.cpp src/zip.cpp ${RESOURCE_ADDED}
+add_executable(SnakeQT ${RESOURCE_ADDED}
+        src/main.cpp
+        src/jeu.cpp
+        src/inmemoryzip.cpp
         src/map.cpp
-        src/map.hpp)
+        src/constants.hpp
+        src/screens/snakewindow.cpp
+        src/screens/mainmenu.hpp
+        src/screens/gamescreen.cpp
+        src/screens/editorscreen.cpp
+        src/screens/snakewindow.cpp
+        src/screens/gamearea.cpp
+)
+
 target_link_libraries(SnakeQT
         Qt5::Core
         Qt5::Gui
