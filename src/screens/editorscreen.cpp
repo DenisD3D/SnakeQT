@@ -329,15 +329,21 @@ void EditorScreen::placeTileAtPosition(const Position pos, const bool is_right_c
     gameArea->update();
 }
 
-void EditorScreen::onTileSelectorItemDoubleClicked(QTableWidgetItem *item) {
+void EditorScreen::onTileSelectorItemDoubleClicked(const QTableWidgetItem *item) {
     lastEditedItemText = item->text();
 }
 
-void EditorScreen::onTileSelectorItemChanged(QTableWidgetItem *item) {
+void EditorScreen::onTileSelectorItemChanged(const QTableWidgetItem *item) {
     if (lastEditedItemText.isEmpty())
         return;
 
     const QString newText = item->text();
+    if (map.getTypes().contains(newText)) {
+        QMessageBox::warning(this, "Invalid Input", "A tile type with the name " + newText + " already exists.");
+        tileTypeTable->item(item->row(), 0)->setText(lastEditedItemText);
+        lastEditedItemText.clear();
+        return;
+    }
 
     map.setNewTypeName(lastEditedItemText, newText);
 

@@ -81,9 +81,9 @@ public:
 public slots:
     void onTileSelectorIconDoubleClicked(QTableWidgetItem *item);
 
-    void onTileSelectorItemDoubleClicked(QTableWidgetItem *item);
+    void onTileSelectorItemDoubleClicked(const QTableWidgetItem *item);
 
-    void onTileSelectorItemChanged(QTableWidgetItem *item);
+    void onTileSelectorItemChanged(const QTableWidgetItem *item);
 
     void showTileSelectorContextMenu(const QPoint &pos);
 
