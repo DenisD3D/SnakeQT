@@ -42,6 +42,28 @@ protected:
     }
 };
 
+class ValidatingLineEdit : public QLineEdit {
+    Q_OBJECT
+
+public:
+    explicit ValidatingLineEdit(QWidget *parent = nullptr) : QLineEdit(parent) {
+    }
+    explicit ValidatingLineEdit(const QString &contents, QWidget *parent = nullptr) : QLineEdit(contents, parent) {
+    }
+
+signals:
+    void invalidInput();
+
+protected:
+    void focusOutEvent(QFocusEvent *event) override {
+        if (hasAcceptableInput()) {
+            QLineEdit::focusOutEvent(event);
+        } else {
+            emit invalidInput();
+        }
+    }
+};
+
 class EditorScreen final : public QWidget {
     Q_OBJECT
 
@@ -60,6 +82,8 @@ public slots:
     void onTileSelectorItemDoubleClicked(QTableWidgetItem *item);
 
     void onTileSelectorItemChanged(QTableWidgetItem *item);
+
+    void showTileSelectorContextMenu(const QPoint &pos);
 
     void placeTileAtPosition(Position pos, bool is_right_click);
 };

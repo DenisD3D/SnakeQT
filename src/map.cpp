@@ -68,9 +68,6 @@ Map::Map(const QString &absolute_file_path, const bool create_map): file(absolut
     if (root.hasAttribute("author")) {
         author = root.attribute("author");
     }
-    if (root.hasAttribute("description")) {
-        description = root.attribute("description");
-    }
 
     if (root.hasAttribute("apple_texture")) {
         has_custom_apple_texture = true;
@@ -182,7 +179,6 @@ bool Map::save() {
     root.setAttribute("height", height);
     root.setAttribute("name", name);
     root.setAttribute("author", author);
-    root.setAttribute("description", description);
     if (default_tile != "ground") {
         root.setAttribute("default_tile", default_tile);
     }
@@ -209,6 +205,7 @@ bool Map::save() {
     if (has_custom_snake_body_texture) {
         snake.setAttribute("body_texture", "snake_body.png");
     }
+    root.appendChild(snake);
 
     for (auto it = types.keyValueBegin(); it != types.keyValueEnd(); ++it) {
         if (it->second.is_default) {
@@ -243,7 +240,7 @@ bool Map::save() {
             }
         }
     }
-    qDebug() << doc.toString();
+
     if (!writer.addFileToZip("map.xml", doc.toByteArray())) {
         qDebug() << "Map: could not save map data";
         return false;
@@ -320,10 +317,12 @@ Map::Map(const Map &map) {
     for (int i = 0; i < width * height; i++) {
         tiles[i] = map.tiles[i];
     }
+    has_custom_apple_texture = map.has_custom_apple_texture;
+    has_custom_snake_head_texture = map.has_custom_snake_head_texture;
+    has_custom_snake_body_texture = map.has_custom_snake_body_texture;
 
     name = map.name;
     author = map.author;
-    description = map.description;
 }
 
 Map::~Map() {
@@ -351,9 +350,12 @@ Map &Map::operator=(const Map &other) {
             tiles[i] = other.tiles[i];
         }
 
+        has_custom_apple_texture = other.has_custom_apple_texture;
+        has_custom_snake_head_texture = other.has_custom_snake_head_texture;
+        has_custom_snake_body_texture = other.has_custom_snake_body_texture;
+
         name = other.name;
         author = other.author;
-        description = other.description;
     }
 
     return *this;
@@ -370,10 +372,48 @@ void Map::setTileAt(const Position pos, const QString &type) {
 }
 
 void Map::setTypeTexture(const QString &text, const QPixmap &pixmap) {
+    if (types[text].is_default) return;
+
     types[text].texture = pixmap;
 }
 
 void Map::setNewTypeName(const QString &old_name, const QString &new_name) {
+    if (types[old_name].is_default) return;
+
     types[new_name] = types[old_name];
     types.remove(old_name);
+}
+
+void Map::deleteType(const QString &text) {
+    if (types[text].is_default) return;
+
+    for (int i = 0; i < width * height; i++) {
+        if (tiles[i] == &types[text]) {
+            tiles[i] = &types[default_tile];
+        }
+    }
+
+    types.remove(text);
+}
+
+void Map::setTypeType(const QString &text, TerrainType type) {
+    if (types[text].is_default) return;
+
+    types[text].type = type;
+}
+
+void Map::createType(const QString &name) {
+    // Make a QPixmap that means "no texture" 32x32
+    QImage image(32, 32, QImage::Format_ARGB32);
+    for (int y = 0; y < 32; y++) {
+        for (int x = 0; x < 32; x++) {
+            if ((x / 4 + y / 4) % 2 == 0) {
+                image.setPixel(x, y, qRgb(0, 0, 0));
+            } else {
+                image.setPixel(x, y, qRgb(119, 60, 197));
+            }
+        }
+    }
+
+    types[name] = {GROUND, QPixmap::fromImage(image), false};
 }

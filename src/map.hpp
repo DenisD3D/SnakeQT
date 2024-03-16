@@ -1,5 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
+#include <qtablewidget.h>
 #include <QtXml>
 #include "inmemoryzip.hpp"
 #include <QtCore/qmap.h>
@@ -33,7 +34,7 @@ class Map {
     int width = 10, height = 10;
     int init_x = 1, init_y = 1;
     int init_snake_length = 5;
-    QString name, author, description;
+    QString name, author;
     Direction init_direction = DROITE;
     QPixmap snake_head_texture, snake_body_texture, apple_texture;
     QString default_tile;
@@ -66,7 +67,6 @@ public:
     int getInitSnakeLength() const { return init_snake_length; }
     QString getName() const { return name; }
     QString getAuthor() const { return author; }
-    QString getDescription() const { return description; }
     Direction getInitDirection() const { return init_direction; }
     QPixmap getSnakeHeadTexture() const { return snake_head_texture; }
     QPixmap getSnakeBodyTexture() const { return snake_body_texture; }
@@ -116,11 +116,23 @@ public:
     void setInitSnakeLength(const int length) { init_snake_length = length; }
     void setName(const QString &n) { name = n; }
     void setAuthor(const QString &a) { author = a; }
-    void setDescription(const QString &d) { description = d; }
     void setInitDirection(const Direction d) { init_direction = d; }
-    void setSnakeHeadTexture(const QPixmap &texture) { snake_head_texture = texture; }
-    void setSnakeBodyTexture(const QPixmap &texture) { snake_body_texture = texture; }
-    void setAppleTexture(const QPixmap &texture) { apple_texture = texture; }
+
+    void setSnakeHeadTexture(const QPixmap &texture) {
+        has_custom_snake_head_texture = true;
+        snake_head_texture = texture;
+    }
+
+    void setSnakeBodyTexture(const QPixmap &texture) {
+        has_custom_snake_body_texture = true;
+        snake_body_texture = texture;
+    }
+
+    void setAppleTexture(const QPixmap &texture) {
+        has_custom_apple_texture = true;
+        apple_texture = texture;
+    }
+
     void setDefaultTile(const QString &type) { default_tile = type; }
 
     void setTileAt(Position pos, const QString &type);
@@ -130,6 +142,12 @@ public:
     void setNewTypeName(const QString &old_name, const QString &new_name);
 
     void setFile(const QString &f) { file = f; }
+
+    void deleteType(const QString &text);
+
+    void setTypeType(const QString &text, TerrainType type);
+
+    void createType(const QString &name);
 };
 
 
