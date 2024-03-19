@@ -29,8 +29,8 @@ Map::Map(const QString &absolute_file_path, const bool create_map): file(absolut
     snake_body_texture.load(":/images/sneak_body.png");
 
     // Load default tiles types
-    types["ground"] = {GROUND, QPixmap(":/images/ground.png"), true};
-    types["wall"] = {WALL, QPixmap(":/images/wall.png"), true};
+    types["ground"] = {WALKABLE | APPLE_SPAWN | BONUS_SPAWN, QPixmap(":/images/ground.png"), true};
+    types["wall"] = {0, QPixmap(":/images/wall.png"), true};
 
     if (create_map) {
         tiles = new TileType *[width * height];
@@ -126,15 +126,7 @@ Map::Map(const QString &absolute_file_path, const bool create_map): file(absolut
         QDomElement tile = map_types.at(i).toElement();
         TileType type;
 
-        QString type_str = tile.attribute("type");
-        if (type_str == "ground") {
-            type.type = GROUND;
-        } else if (type_str == "wall") {
-            type.type = WALL;
-        } else {
-            qDebug() << "Map: unknown tile type" << type_str;
-            return;
-        }
+        type.type = tile.attribute("type").toInt();
 
         QPixmap texture;
         QByteArray texture_data;
@@ -214,11 +206,7 @@ bool Map::save() {
 
         QDomElement type = doc.createElement("type");
         type.setAttribute("name", it->first);
-        if (it->second.type == GROUND) {
-            type.setAttribute("type", "ground");
-        } else if (it->second.type == WALL) {
-            type.setAttribute("type", "wall");
-        }
+        type.setAttribute("type", it->second.type);
         type.setAttribute("texture", it->first + ".png");
         root.appendChild(type);
     }
@@ -396,7 +384,7 @@ void Map::deleteType(const QString &text) {
     types.remove(text);
 }
 
-void Map::setTypeType(const QString &text, TerrainType type) {
+void Map::setTypeType(const QString &text, const int type) {
     if (types[text].is_default) return;
 
     types[text].type = type;
@@ -415,5 +403,5 @@ void Map::createType(const QString &name) {
         }
     }
 
-    types[name] = {GROUND, QPixmap::fromImage(image), false};
+    types[name] = {WALKABLE | APPLE_SPAWN | BONUS_SPAWN, QPixmap::fromImage(image), false};
 }

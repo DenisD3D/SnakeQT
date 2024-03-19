@@ -6,12 +6,16 @@
 #include <QtCore/qmap.h>
 #include <QtGui/qpixmap.h>
 
-typedef enum { GROUND, WALL } TerrainType;
+typedef enum {
+    WALKABLE = 1 << 0, // Allow the snake to go on this tile
+    APPLE_SPAWN = 1 << 1, // Allow the apple to spawn on this tile
+    BONUS_SPAWN = 1 << 2, // Allow the bonus to spawn on this tile
+} TerrainType;
 
 typedef enum { GAUCHE = 0, DROITE, HAUT, BAS } Direction;
 
 struct TileType {
-    TerrainType type = GROUND;
+    int type = 0;
     QPixmap texture;
     bool is_default = false;
 };
@@ -163,7 +167,7 @@ public:
 
     void deleteType(const QString &text);
 
-    void setTypeType(const QString &text, TerrainType type);
+    void setTypeType(const QString &text, int type);
 
     void createType(const QString &name);
 };

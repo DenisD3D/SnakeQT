@@ -52,7 +52,7 @@ bool Jeu::init() {
     do {
         applePos.x = distr(gen);
         applePos.y = distr(gen);
-    } while (!posValide(applePos));
+    } while (!posValide(applePos, APPLE_SPAWN));
 
     return true;
 }
@@ -71,7 +71,7 @@ void Jeu::evolue() {
     posTest.x = (snake.front().x + depX[dirSnake] + map.getWidth()) % map.getWidth();
     posTest.y = (snake.front().y + depY[dirSnake] + map.getHeight()) % map.getHeight();
 
-    if (posValide(posTest)) {
+    if (posValide(posTest, WALKABLE)) {
         snake.push_front(posTest); // Add the new head
 
         if (posTest == applePos) {
@@ -80,7 +80,7 @@ void Jeu::evolue() {
             do {
                 applePos.x = distr(gen);
                 applePos.y = distr(gen);
-            } while (!posValide(applePos));
+            } while (!posValide(applePos, APPLE_SPAWN));
             // Don't remove the last element of the snake to make it grow
         } else {
             // Remove the last element of the snake to make it move
@@ -88,7 +88,7 @@ void Jeu::evolue() {
         }
     } else {
         // Game over
-        // snake.clear();
+        snake.clear();
     }
 }
 
@@ -96,11 +96,11 @@ const list<Position> *Jeu::getSnake() const {
     return &snake;
 }
 
-bool Jeu::posValide(const Position &pos) const {
+bool Jeu::posValide(const Position &pos, const int flags) const {
     if (pos.x < 0 || pos.x >= map.getWidth() || pos.y < 0 || pos.y >= map.getHeight()) // Out of bounds
         return false;
 
-    if (map.getTileAt(pos).type != GROUND)
+    if (!(map.getTileAt(pos).type & flags))
         return false;
 
     auto itSnake = snake.begin();

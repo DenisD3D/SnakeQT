@@ -34,7 +34,7 @@ public:
     const std::list<Position> *getSnake() const;
 
     // Indique si la case ? une position donn?e existe et est libre
-    bool posValide(const Position &) const;
+    bool posValide(const Position &, int flags) const;
 
     // Modifie la direction
     void setDirection(Direction);

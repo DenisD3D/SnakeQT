@@ -13,3 +13,17 @@ git clone --recurse-submodules https://github.com/DenisD3D/SnakeQT.git
 cmake -S . -B build
 cmake --build build
 ```
+
+
+## Tile preprocessing using imageMagick
+Some tiles aren't in the right size or contains transparency. To fix this, the following command can be used to fix all images in subfolders of the current directory:
+```bash
+find . -name '*.png' -exec convert {} -scale 32x32 -background "#ecb06e" -alpha remove -alpha off {} \;
+```
+Replace #ecb06e by the background color of your map
+Extract a spritesheet into individual images:
+```bash
+magick convert roguelikeSheet_transparent.png -crop 57x31-1-1@ +repage +adjoin spaced-1_%d.png
+```
+Where 57 is the number of sprite in the x-axis and 31 in the y-axis and -1-1 is the offset between each sprite
+Tested on https://kenney.nl/ assets

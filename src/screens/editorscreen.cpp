@@ -300,10 +300,10 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
 
     auto *dafaultTypeLabel = new QLabel("Default Tile Type");
     for (auto it = types.begin(); it != types.end(); ++it) {
-        if (it.value().is_default) {
-            defaulTypeSelect->addItem(it.key());
-        }
+        defaulTypeSelect->addItem(it.key());
     }
+    defaulTypeSelect->setCurrentText(map.getDefaultTile());
+
     connect(defaulTypeSelect, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](const int index) {
         map.setDefaultTile(defaulTypeSelect->itemText(index));
     });
@@ -378,6 +378,13 @@ void EditorScreen::onTileSelectorItemChanged(const QTableWidgetItem *item) {
 
     map.setNewTypeName(lastEditedItemText, newText);
 
+    const bool isSelected = defaulTypeSelect->currentText() == lastEditedItemText;
+    defaulTypeSelect->removeItem(defaulTypeSelect->findText(lastEditedItemText));
+    defaulTypeSelect->addItem(newText);
+    if (isSelected) {
+        defaulTypeSelect->setCurrentText(newText);
+    }
+
     lastEditedItemText.clear();
 }
 
@@ -386,36 +393,50 @@ void EditorScreen::showTileSelectorContextMenu(const QPoint &pos) {
 
     const QTableWidgetItem *item = tileTypeTable->itemAt(pos);
 
+    if (item == nullptr)
+        return;
+
+    if (!map.getTypes().contains(item->text()))
+        return;
+
+    TileType type = map.getTypes()[item->text()];
+
     const auto label = new QLabel(" Tile type:", this);
     const auto action_label = new QWidgetAction(this);
-    action_label->setDisabled(map.getTypes()[item->text()].is_default);
+    action_label->setDisabled(type.is_default);
     action_label->setDefaultWidget(label);
     contextMenu.addAction(action_label);
 
-    // Create an action group
-    const auto actionGroup = new QActionGroup(this);
-    actionGroup->setExclusive(true); // Only one action in the group can be checked at a time
-
     // Create actions and add them to the group
-    const auto action_wall = new QAction("WALL", this);
-    action_wall->setCheckable(false);
-    action_wall->setDisabled(map.getTypes()[item->text()].is_default);
-    action_wall->setChecked(map.getTypes()[item->text()].type == WALL);
-    connect(action_wall, &QAction::triggered, [this, item] {
-        map.setTypeType(item->text(), WALL);
-    });
-    actionGroup->addAction(action_wall);
-    contextMenu.addAction(action_wall);
+    const auto action_traversable = new QAction("WALKABLE", this);
+    action_traversable->setCheckable(true);
+    action_traversable->setDisabled(type.is_default);
+    action_traversable->setChecked(type.type & WALKABLE);
+    connect(action_traversable, &QAction::triggered, [this, item, type] {
+        // Remove spawn flags if traversable is unchecked
+        const int flags = type.type & WALKABLE ? type.type & ~APPLE_SPAWN & ~BONUS_SPAWN : type.type | APPLE_SPAWN | BONUS_SPAWN;
 
-    const auto action_ground = new QAction("GROUND", this);
-    action_ground->setCheckable(true);
-    action_ground->setDisabled(map.getTypes()[item->text()].is_default);
-    action_ground->setChecked(map.getTypes()[item->text()].type == GROUND);
-    connect(action_ground, &QAction::triggered, [this, item] {
-        map.setTypeType(item->text(), GROUND);
+        map.setTypeType(item->text(), flags ^ WALKABLE);
     });
-    actionGroup->addAction(action_ground);
-    contextMenu.addAction(action_ground);
+    contextMenu.addAction(action_traversable);
+
+    const auto action_apple = new QAction("APPLE SPAWN", this);
+    action_apple->setCheckable(true);
+    action_apple->setDisabled(type.is_default);
+    action_apple->setChecked(type.type & APPLE_SPAWN);
+    connect(action_apple, &QAction::triggered, [this, item, type] {
+        map.setTypeType(item->text(), type.type ^ APPLE_SPAWN);
+    });
+    contextMenu.addAction(action_apple);
+
+    const auto action_bonus = new QAction("BONUS SPAWN", this);
+    action_bonus->setCheckable(true);
+    action_bonus->setDisabled(type.is_default);
+    action_bonus->setChecked(type.type & BONUS_SPAWN);
+    connect(action_bonus, &QAction::triggered, [this, item, type] {
+        map.setTypeType(item->text(), type.type ^ BONUS_SPAWN);
+    });
+    contextMenu.addAction(action_bonus);
 
     contextMenu.addSeparator();
 
