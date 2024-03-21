@@ -11,11 +11,14 @@ class GameScreen final : public QWidget {
     Q_OBJECT
 
     GameArea *gameArea;
+    QWidget *pauseOverlay;
 
 public:
     Jeu jeu;
 
     explicit GameScreen(QWidget *parent = nullptr, const QString &file_info = "map1.skm");
+
+    void resizeEvent(QResizeEvent *event);
 
     void handleTimer();
 

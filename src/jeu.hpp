@@ -15,6 +15,7 @@ protected:
     std::queue<Direction> directionsBuffer;
     Position applePos = Position(-1, -1);
     std::mt19937 gen;
+    bool pause = false;
 
 public:
     Jeu();
@@ -42,6 +43,14 @@ public:
     const Position *getApplePos() const;
 
     const Map &getMap() const;
+
+    void togglePause() {
+        pause = !pause;
+    }
+
+    bool isPaused() const {
+        return pause;
+    }
 };
 
 #endif

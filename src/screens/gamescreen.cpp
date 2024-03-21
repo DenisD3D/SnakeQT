@@ -26,6 +26,30 @@ GameScreen::GameScreen(QWidget *parent, const QString &file_info): QWidget(paren
     auto *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GameScreen::handleTimer);
     timer->start(100);
+
+
+    // Pause overlay
+    pauseOverlay = new QWidget(this);
+    pauseOverlay->setStyleSheet("background-color: rgba(0, 0, 0, 127); color: white; font-size: 24px;");
+    pauseOverlay->hide(); // hide it initially
+
+    auto *pauseLabel = new QLabel("Game Paused", pauseOverlay);
+    pauseLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+
+    auto *resumeLabel = new QLabel("Press P to resume", pauseOverlay); // New label
+    resumeLabel->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    resumeLabel->setStyleSheet("font-size: 18px;");
+
+    auto *pauseLayout = new QVBoxLayout(pauseOverlay);
+    pauseLayout->setContentsMargins(0, 0, 0, 0);
+    pauseLayout->setSpacing(0);
+    pauseLayout->addWidget(pauseLabel);
+    pauseLayout->addWidget(resumeLabel);
+}
+
+void GameScreen::resizeEvent(QResizeEvent* event) {
+    QWidget::resizeEvent(event);
+    pauseOverlay->resize(event->size());
 }
 
 /**
@@ -40,6 +64,18 @@ void GameScreen::keyPressEvent(QKeyEvent *event) {
         jeu.setDirection(HAUT);
     if (event->key() == Qt::Key_Down)
         jeu.setDirection(BAS);
+
+    if (event->key() == Qt::Key_P) {
+        jeu.togglePause();
+
+        if (jeu.isPaused()) {
+            pauseOverlay->show();
+        } else {
+            pauseOverlay->hide();
+        }
+    }
+
+
     update();
 }
 

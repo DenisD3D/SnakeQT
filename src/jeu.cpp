@@ -18,6 +18,7 @@ Jeu::Jeu(const Jeu &jeu): map(jeu.map), snake(jeu.snake) {
     dirSnake = jeu.dirSnake;
     std::random_device rd;
     gen.seed(rd());
+    pause = jeu.pause;
 }
 
 Jeu::~Jeu() {
@@ -28,6 +29,7 @@ Jeu &Jeu::operator=(const Jeu &jeu) {
     dirSnake = jeu.dirSnake;
     snake = jeu.snake;
     map = jeu.map;
+    pause = jeu.pause;
 
     return *this;
 }
@@ -58,6 +60,9 @@ bool Jeu::init() {
 }
 
 void Jeu::evolue() {
+    if (pause) // Game is paused, don't do anything
+        return;
+
     if (!directionsBuffer.empty()) {
         dirSnake = directionsBuffer.front();
         directionsBuffer.pop();
