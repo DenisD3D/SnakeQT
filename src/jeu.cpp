@@ -50,10 +50,15 @@ bool Jeu::init() {
     dirSnake = map.getInitDirection();
 
 
-    std::uniform_int_distribution<> distr(0, map.getWidth() - 1);
+    std::uniform_int_distribution distr(0, map.getWidth() - 1);
+    int attempts = 0;
     do {
         applePos.x = distr(gen);
         applePos.y = distr(gen);
+        attempts++;
+        if (attempts > 2 * map.getWidth() * map.getHeight()) {
+            return false;
+        }
     } while (!posValide(applePos, APPLE_SPAWN));
 
     return true;
@@ -82,9 +87,14 @@ void Jeu::evolue() {
         if (posTest == applePos) {
             // The snake eats the apple, place a new apple
             std::uniform_int_distribution<> distr(0, map.getWidth() - 1);
+            int attempts = 0;
             do {
                 applePos.x = distr(gen);
                 applePos.y = distr(gen);
+                attempts++;
+                if (attempts > 2 * map.getWidth() * map.getHeight()) {
+                   break; // TODO: lose / win condition ?
+                }
             } while (!posValide(applePos, APPLE_SPAWN));
             // Don't remove the last element of the snake to make it grow
         } else {
@@ -93,7 +103,7 @@ void Jeu::evolue() {
         }
     } else {
         // Game over
-        snake.clear();
+        snake.clear(); // TODO: lose condition
     }
 }
 
