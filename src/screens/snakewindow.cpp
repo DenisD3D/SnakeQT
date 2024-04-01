@@ -26,14 +26,15 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
     const auto menuBar = new QMenuBar;
 
     const auto fileMenu = new QMenu(tr("&File"), this);
+    const QAction *mainMenuAction = fileMenu->addAction(tr("&Main Menu"));
     const QAction *fullScreenAction = fileMenu->addAction(tr("Full &Screen"));
     const QAction *exitAction = fileMenu->addAction(tr("E&xit"));
     menuBar->addMenu(fileMenu);
 
-    // Toggle full screen when the "Full Screen" action is triggered
+    connect(mainMenuAction, &QAction::triggered, this, [this] {
+        stackedWidget->setCurrentWidget(mainMenu);
+    });
     connect(fullScreenAction, &QAction::triggered, this, &SnakeWindow::toggleFullScreen);
-
-    // Connect the "Exit" action to the application's quit slot
     connect(exitAction, &QAction::triggered, qApp, &QApplication::quit);
 
 
