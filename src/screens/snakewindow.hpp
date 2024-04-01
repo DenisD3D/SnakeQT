@@ -4,6 +4,7 @@
 #include <QtCore/QtCore>
 #include <QtWidgets/QtWidgets>
 
+#include "browsemapscreen.hpp"
 #include "editorscreen.hpp"
 #include "mainmenu.hpp"
 #include "gamescreen.hpp"
@@ -15,6 +16,7 @@ protected:
     QStackedWidget *stackedWidget;
     MainMenu *mainMenu;
     GameScreen *gameScreen{};
+    BrowseMapScreen *browseMapScreen{};
     EditorScreen *editorScreen{};
 
 public:
@@ -22,6 +24,8 @@ public:
 
 public slots:
     void handleStartGameClicked();
+
+    void handleBrowseMapClicked();
 
     static void handleExitClicked();
 

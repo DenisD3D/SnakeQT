@@ -14,6 +14,7 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
     mainMenu = new MainMenu(this);
 
     connect(mainMenu, &MainMenu::startGameClicked, this, &SnakeWindow::handleStartGameClicked);
+    connect(mainMenu, &MainMenu::browseMapClicked, this, &SnakeWindow::handleBrowseMapClicked);
     connect(mainMenu, &MainMenu::exitClicked, this, &SnakeWindow::handleExitClicked);
 
     stackedWidget->addWidget(mainMenu);
@@ -89,6 +90,22 @@ void SnakeWindow::handleStartGameClicked() {
     gameScreen = new GameScreen(this);
     stackedWidget->addWidget(gameScreen);
     stackedWidget->setCurrentWidget(gameScreen);
+}
+
+void SnakeWindow::handleBrowseMapClicked() {
+    browseMapScreen = new BrowseMapScreen(this);
+    stackedWidget->addWidget(browseMapScreen);
+    stackedWidget->setCurrentWidget(browseMapScreen);
+
+    connect(browseMapScreen, &BrowseMapScreen::back, this, [this] {
+        stackedWidget->setCurrentWidget(mainMenu);
+    });
+
+    connect(browseMapScreen, &BrowseMapScreen::load, this, [this](const QString &fileName) {
+        gameScreen = new GameScreen(this, fileName);
+        stackedWidget->addWidget(gameScreen);
+        stackedWidget->setCurrentWidget(gameScreen);
+    });
 }
 
 void SnakeWindow::handleExitClicked() {

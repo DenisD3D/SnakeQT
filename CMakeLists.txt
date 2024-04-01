@@ -11,6 +11,7 @@ find_package(Qt5 COMPONENTS
         Gui
         Widgets
         Xml
+        Network
         REQUIRED)
 
 add_subdirectory(minizip-ng)
@@ -21,15 +22,17 @@ qt5_add_resources(RESOURCE_ADDED resources.qrc)
 add_executable(SnakeQT ${RESOURCE_ADDED}
         src/main.cpp
         src/jeu.cpp
-        src/inmemoryzip.cpp
         src/map.cpp
         src/constants.hpp
+        src/inmemoryzip.cpp
+        src/network_manager.cpp
         src/screens/snakewindow.cpp
         src/screens/mainmenu.hpp
         src/screens/gamescreen.cpp
         src/screens/editorscreen.cpp
         src/screens/snakewindow.cpp
         src/screens/gamearea.cpp
+        src/screens/browsemapscreen.cpp
 )
 
 target_link_libraries(SnakeQT
@@ -37,5 +40,6 @@ target_link_libraries(SnakeQT
         Qt5::Gui
         Qt5::Widgets
         Qt5::Xml
+        Qt5::Network
         minizip
 )
