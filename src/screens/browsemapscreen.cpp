@@ -51,6 +51,10 @@ void BrowseMapScreen::loadClicked() {
             downloader = new FileDownloader(QUrl("https://snakeqt.denisd3d.fr/maps/" + mapName),
                                             this);
             connect(downloader, &FileDownloader::downloaded, [this, mapName]() {
+                const QDir dir("maps");
+                if (!dir.exists()) {
+                    dir.mkpath(".");
+                }
                 QFile file("maps/" + mapName + ".skm");
                 file.open(QIODevice::WriteOnly);
                 file.write(downloader->downloadedData());
