@@ -6,6 +6,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(ZSTD_TAG release)
+set(ZLIB_TAG develop)
+set(MZ_FORCE_FETCH_LIBS ON)
+
 find_package(Qt5 COMPONENTS
         Core
         Gui
@@ -42,4 +46,14 @@ target_link_libraries(SnakeQT
         Qt5::Xml
         Qt5::Network
         minizip
+)
+
+add_custom_command(
+        TARGET SnakeQT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Core> $<TARGET_FILE_DIR:SnakeQT>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Gui> $<TARGET_FILE_DIR:SnakeQT>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Widgets> $<TARGET_FILE_DIR:SnakeQT>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Xml> $<TARGET_FILE_DIR:SnakeQT>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Network> $<TARGET_FILE_DIR:SnakeQT>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:minizip> $<TARGET_FILE_DIR:SnakeQT>
 )
