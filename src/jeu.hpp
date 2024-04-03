@@ -30,7 +30,7 @@ public:
 
     bool init();
 
-    void evolue();
+    void tick();
 
     const std::list<Position> *getSnake() const;
 

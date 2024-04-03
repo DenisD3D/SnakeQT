@@ -83,6 +83,6 @@ void GameScreen::keyPressEvent(QKeyEvent *event) {
  * Tick the game
  */
 void GameScreen::handleTimer() {
-    jeu.evolue();
+    jeu.tick();
     update();
 }

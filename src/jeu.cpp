@@ -64,7 +64,7 @@ bool Jeu::init() {
     return true;
 }
 
-void Jeu::evolue() {
+void Jeu::tick() {
     if (pause) // Game is paused, don't do anything
         return;
 
@@ -145,7 +145,7 @@ void Jeu::setDirection(const Direction dir) {
     if (previousDir == BAS && dir == HAUT)
         return;
 
-    // Add direction to buffer, unpacked in evolue()
+    // Add direction to buffer, unpacked in tick()
     directionsBuffer.push(dir);
 }
 
