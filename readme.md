@@ -8,11 +8,14 @@
 ```bash
 git clone --recurse-submodules https://github.com/DenisD3D/SnakeQT.git
 ```
-4. Run cmake in the root directory of the project.
+4. On Windows, set the environment variable `Qt5_DIR` to the directory containing the `Qt5Config.cmake` file (e.g. `C:\Qt\5.15.2\mingw81_64\lib\cmake\Qt5`)
+5. Run cmake in the root directory of the project.
 ```bash
 cmake -S . -B build
 cmake --build build
 ```
+6. On Windows, define QT_QPA_PLATFORM_PLUGIN_PATH to the directory containing the `qwindows.dll` file (e.g. `C:\Qt\5.15.2\mingw81_64\plugins\platforms`) before running SnakeQT.exe.
+7. Run the executable in the build directory.
 
 
 ## Tile preprocessing using imageMagick
