@@ -75,7 +75,6 @@ void GameScreen::keyPressEvent(QKeyEvent *event) {
         }
     }
 
-
     update();
 }
 

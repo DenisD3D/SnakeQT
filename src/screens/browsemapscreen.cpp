@@ -36,7 +36,7 @@ BrowseMapScreen::BrowseMapScreen(QWidget *parent): QWidget(parent) {
 }
 
 void BrowseMapScreen::loadOnlineMaps() {
-    downloader = new FileDownloader(QUrl("https://snakeqt.denisd3d.fr/maps"), this);
+    downloader = new FileDownloader(QUrl("http://snakeqt.denisd3d.fr/maps"), this);
     connect(downloader, &FileDownloader::downloaded, this, &BrowseMapScreen::onlineMapListDownloaded);
 }
 
@@ -48,7 +48,7 @@ void BrowseMapScreen::loadClicked() {
     if (mapList->currentItem() != nullptr) {
         if (!mapList->currentItem()->data(Qt::UserRole).toBool()) {
             auto mapName = mapList->currentItem()->text().replace(".skm", "");
-            downloader = new FileDownloader(QUrl("https://snakeqt.denisd3d.fr/maps/" + mapName),
+            downloader = new FileDownloader(QUrl("http://snakeqt.denisd3d.fr/maps/" + mapName),
                                             this);
             connect(downloader, &FileDownloader::downloaded, [this, mapName]() {
                 const QDir dir("maps");
