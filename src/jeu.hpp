@@ -17,6 +17,9 @@ protected:
     std::mt19937 gen;
     bool pause = false;
 
+private:
+    int score = 0;
+
 public:
     Jeu();
 
@@ -50,6 +53,13 @@ public:
 
     bool isPaused() const {
         return pause;
+    }
+
+    int getScore() const {
+        return score;
+    }
+    void increaseScore(int point) {
+        score=score+point;
     }
 };
 

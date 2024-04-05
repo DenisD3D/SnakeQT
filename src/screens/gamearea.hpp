@@ -1,11 +1,13 @@
 #ifndef GAMEAREA_HPP
 #define GAMEAREA_HPP
 
+
 #include <QtCore/QtCore>
 #include <QtWidgets/QtWidgets>
 
 #include "../map.hpp"
 #include "../constants.hpp"
+#include <iostream>
 
 class GameArea final : public QWidget {
     Q_OBJECT

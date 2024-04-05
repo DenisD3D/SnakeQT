@@ -22,7 +22,12 @@ public:
 
     void handleTimer();
 
+
 protected:
     void keyPressEvent(QKeyEvent *) override;
+
+private:
+    QLabel *scoreLabel;
+    void updateScoreLabel();
 };
 #endif //GAMESCREEN_HPP

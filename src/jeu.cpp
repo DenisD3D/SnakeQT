@@ -1,4 +1,5 @@
 #include "jeu.hpp"
+#include <iostream>
 
 using namespace std;
 
@@ -85,6 +86,9 @@ void Jeu::tick() {
         snake.push_front(posTest); // Add the new head
 
         if (posTest == applePos) {
+
+            increaseScore(1);
+            std::cout << "Snake eats the apple!" << std::endl;
             // The snake eats the apple, place a new apple
             std::uniform_int_distribution<> distr(0, map.getWidth() - 1);
             int attempts = 0;

@@ -1,5 +1,5 @@
 #include "gamescreen.hpp"
-
+#include <iostream>
 
 /**
  * Construct main game window
@@ -12,7 +12,7 @@ GameScreen::GameScreen(QWidget *parent, const QString &file_info): QWidget(paren
 
     auto *layout = new QVBoxLayout;
     auto *mapNameLabel = new QLabel(jeu.getMap().getName() + " by " + jeu.getMap().getAuthor(), this);
-    auto *scoreLabel = new QLabel("Score: 0", this);
+     scoreLabel = new QLabel("Score: 0", this);
 
     layout->addWidget(mapNameLabel);
     layout->addWidget(gameArea);
@@ -75,7 +75,12 @@ void GameScreen::keyPressEvent(QKeyEvent *event) {
         }
     }
 
+
     update();
+}
+
+void GameScreen::updateScoreLabel() {
+    scoreLabel->setText("Score: " + QString::number(jeu.getScore()));
 }
 
 /**
@@ -83,5 +88,10 @@ void GameScreen::keyPressEvent(QKeyEvent *event) {
  */
 void GameScreen::handleTimer() {
     jeu.tick();
+
+    updateScoreLabel();
+
+
+
     update();
 }
