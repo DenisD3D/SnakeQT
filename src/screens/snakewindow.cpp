@@ -51,6 +51,8 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
             stackedWidget->addWidget(gameScreen);
             stackedWidget->setCurrentWidget(gameScreen);
         }
+
+
     });
 
     const auto editorMenu = new QMenu(tr("&Editor"), this);
@@ -84,6 +86,9 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
 
     // Set the menu bar
     setMenuBar(menuBar);
+
+
+
 }
 
 void SnakeWindow::handleStartGameClicked() {
@@ -91,6 +96,9 @@ void SnakeWindow::handleStartGameClicked() {
     gameScreen = new GameScreen(this);
     stackedWidget->addWidget(gameScreen);
     stackedWidget->setCurrentWidget(gameScreen);
+
+    connect(gameScreen,&GameScreen::gameOver, this, &SnakeWindow::handleGameOver);
+    setCentralWidget(gameScreen);
 }
 
 void SnakeWindow::handleBrowseMapClicked() {
@@ -106,10 +114,22 @@ void SnakeWindow::handleBrowseMapClicked() {
         gameScreen = new GameScreen(this, fileName);
         stackedWidget->addWidget(gameScreen);
         stackedWidget->setCurrentWidget(gameScreen);
+
     });
 }
 
 void SnakeWindow::handleExitClicked() {
     // Exit the application when the "Exit" button is clicked
     QApplication::quit();
+}
+
+void SnakeWindow::handleGameOver(int score) {
+    // Switch to the end game screen when the game is over
+    delete gameScreen;
+    gameScreen = nullptr;
+
+    endGameScreen = new EndGameScreen(score, this);
+    setCentralWidget(endGameScreen);
+
+    update();
 }

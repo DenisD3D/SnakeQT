@@ -8,6 +8,7 @@
 #include "editorscreen.hpp"
 #include "mainmenu.hpp"
 #include "gamescreen.hpp"
+#include "endgamescreen.hpp"
 
 class SnakeWindow final : public QMainWindow {
     Q_OBJECT
@@ -19,6 +20,7 @@ protected:
     BrowseMapScreen *browseMapScreen{};
     EditorScreen *editorScreen{};
 
+
 public:
     explicit SnakeWindow(QWidget *pParent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 
@@ -26,6 +28,8 @@ public slots:
     void handleStartGameClicked();
 
     void handleBrowseMapClicked();
+
+    void handleGameOver(int score);
 
     static void handleExitClicked();
 
@@ -36,6 +40,9 @@ public slots:
             showFullScreen();
         }
     }
+private :
+    EndGameScreen *endGameScreen;
+
 };
 
 #endif

@@ -108,6 +108,7 @@ void Jeu::tick() {
     } else {
         // Game over
         snake.clear(); // TODO: lose condition
+        game_over = -1; // perdu
     }
 }
 

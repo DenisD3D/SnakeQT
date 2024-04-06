@@ -20,6 +20,7 @@ protected:
 private:
     int score = 0;
 
+
 public:
     Jeu();
 
@@ -61,6 +62,7 @@ public:
     void increaseScore(int point) {
         score=score+point;
     }
+    int game_over;  // 0: not over, 1: win, -1: lose
 };
 
 #endif

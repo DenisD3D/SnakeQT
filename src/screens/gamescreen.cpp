@@ -45,6 +45,8 @@ GameScreen::GameScreen(QWidget *parent, const QString &file_info): QWidget(paren
     pauseLayout->setSpacing(0);
     pauseLayout->addWidget(pauseLabel);
     pauseLayout->addWidget(resumeLabel);
+
+
 }
 
 void GameScreen::resizeEvent(QResizeEvent* event) {
@@ -83,6 +85,10 @@ void GameScreen::updateScoreLabel() {
     scoreLabel->setText("Score: " + QString::number(jeu.getScore()));
 }
 
+void GameScreen::endGame() {
+    emit gameOver(jeu.getScore());
+}
+
 /**
  * Tick the game
  */
@@ -91,6 +97,18 @@ void GameScreen::handleTimer() {
 
     updateScoreLabel();
 
+    if (jeu.game_over != 0) {
+        // Game over
+        if (jeu.game_over == 1) {
+            // Win
+            std::cout << "You win!" << std::endl;
+        } else {
+            // Lose
+            std::cout << "You lose!" << std::endl;
+            emit gameOver(jeu.getScore());
+        }
+
+    }
 
 
     update();

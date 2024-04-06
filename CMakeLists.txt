@@ -37,7 +37,7 @@ add_executable(SnakeQT ${RESOURCE_ADDED}
         src/screens/snakewindow.cpp
         src/screens/gamearea.cpp
         src/screens/browsemapscreen.cpp
-)
+        src/screens/endgamescreen.hpp src/screens/endgamescreen.cpp)
 
 target_link_libraries(SnakeQT
         Qt5::Core
