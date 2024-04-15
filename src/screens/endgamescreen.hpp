@@ -8,6 +8,12 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QTabWidget>
+#include <QTableWidgetItem>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+
 
 class EndGameScreen final : public QWidget {
 Q_OBJECT
@@ -20,7 +26,7 @@ private slots:
 
 private:
     QLabel *scoreLabel;
-    QLineEdit *nameLineEdit;
+    QLineEdit *nameInput;
 };
 
 #endif //SNAKEQT_ENDGAMESCREEN_HPP
