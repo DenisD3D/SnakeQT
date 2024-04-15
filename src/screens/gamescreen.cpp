@@ -12,7 +12,7 @@ GameScreen::GameScreen(QWidget *parent, const QString &file_info): QWidget(paren
 
     auto *layout = new QVBoxLayout;
     auto *mapNameLabel = new QLabel(jeu.getMap().getName() + " by " + jeu.getMap().getAuthor(), this);
-     scoreLabel = new QLabel("Score: 0", this);
+    scoreLabel = new QLabel("Score: 0", this);
 
     layout->addWidget(mapNameLabel);
     layout->addWidget(gameArea);
@@ -45,11 +45,9 @@ GameScreen::GameScreen(QWidget *parent, const QString &file_info): QWidget(paren
     pauseLayout->setSpacing(0);
     pauseLayout->addWidget(pauseLabel);
     pauseLayout->addWidget(resumeLabel);
-
-
 }
 
-void GameScreen::resizeEvent(QResizeEvent* event) {
+void GameScreen::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
     pauseOverlay->resize(event->size());
 }
@@ -67,7 +65,7 @@ void GameScreen::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Down)
         jeu.setDirection(BAS);
 
-    if (event->key() == Qt::Key_P) {
+    if (event->key() == Qt::Key_P || event->key() == Qt::Key_Escape) {
         jeu.togglePause();
 
         if (jeu.isPaused()) {
@@ -77,7 +75,6 @@ void GameScreen::keyPressEvent(QKeyEvent *event) {
         }
     }
 
-
     update();
 }
 
@@ -85,31 +82,16 @@ void GameScreen::updateScoreLabel() {
     scoreLabel->setText("Score: " + QString::number(jeu.getScore()));
 }
 
-void GameScreen::endGame() {
-    emit gameOver(jeu.getScore());
-}
-
 /**
  * Tick the game
  */
 void GameScreen::handleTimer() {
-    jeu.tick();
+    if(jeu.tick()) { // Tick the game
+        // The player lost this tick
+        emit gameOver(jeu.getScore());
+    }
 
     updateScoreLabel();
 
-    if (jeu.game_over != 0) {
-        // Game over
-        if (jeu.game_over == 1) {
-            // Win
-            std::cout << "You win!" << std::endl;
-        } else {
-            // Lose
-            std::cout << "You lose!" << std::endl;
-            emit gameOver(jeu.getScore());
-        }
-
-    }
-
-
-    update();
+    update(); // Redraw the screen
 }

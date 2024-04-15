@@ -1,6 +1,8 @@
 #include "jeu.hpp"
 #include <iostream>
 
+#define APPLE_VALUE 10
+
 using namespace std;
 
 Jeu::Jeu() {
@@ -65,9 +67,13 @@ bool Jeu::init() {
     return true;
 }
 
-void Jeu::tick() {
-    if (pause) // Game is paused, don't do anything
-        return;
+/**
+ * The main game logic, called periodically
+ * @return true if the player lost during this tick
+ */
+bool Jeu::tick() {
+    if (pause || gameOver) // Game is paused or finished, don't do anything
+        return false;
 
     if (!directionsBuffer.empty()) {
         dirSnake = directionsBuffer.front();
@@ -86,10 +92,9 @@ void Jeu::tick() {
         snake.push_front(posTest); // Add the new head
 
         if (posTest == applePos) {
+            // The snake eats the apple, increase the score and place a new apple
+            increaseScore(APPLE_VALUE);
 
-            increaseScore(1);
-            //std::cout << "Snake eats the apple!" << std::endl;
-            // The snake eats the apple, place a new apple
             std::uniform_int_distribution<> distr(0, map.getWidth() - 1);
             int attempts = 0;
             do {
@@ -97,7 +102,8 @@ void Jeu::tick() {
                 applePos.y = distr(gen);
                 attempts++;
                 if (attempts > 2 * map.getWidth() * map.getHeight()) {
-                   break; // TODO: lose / win condition ?
+                    gameOver = true;
+                    return true;
                 }
             } while (!posValide(applePos, APPLE_SPAWN));
             // Don't remove the last element of the snake to make it grow
@@ -107,9 +113,12 @@ void Jeu::tick() {
         }
     } else {
         // Game over
-        snake.clear(); // TODO: lose condition
-        game_over = -1; // perdu
+        snake.clear();
+        gameOver = true; // perdu
+        return true;
     }
+
+    return false;
 }
 
 const list<Position> *Jeu::getSnake() const {

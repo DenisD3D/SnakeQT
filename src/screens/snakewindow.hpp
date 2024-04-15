@@ -19,7 +19,7 @@ protected:
     GameScreen *gameScreen{};
     BrowseMapScreen *browseMapScreen{};
     EditorScreen *editorScreen{};
-
+    EndGameScreen *endGameScreen{};
 
 public:
     explicit SnakeWindow(QWidget *pParent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
@@ -40,9 +40,6 @@ public slots:
             showFullScreen();
         }
     }
-private :
-    EndGameScreen *endGameScreen;
-
 };
 
 #endif

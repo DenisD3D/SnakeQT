@@ -16,10 +16,8 @@ protected:
     Position applePos = Position(-1, -1);
     std::mt19937 gen;
     bool pause = false;
-
-private:
+    bool gameOver = false;
     int score = 0;
-
 
 public:
     Jeu();
@@ -34,7 +32,7 @@ public:
 
     bool init();
 
-    void tick();
+    bool tick();
 
     const std::list<Position> *getSnake() const;
 
@@ -59,10 +57,14 @@ public:
     int getScore() const {
         return score;
     }
-    void increaseScore(int point) {
-        score=score+point;
+
+    void increaseScore(const int point) {
+        score = score + point;
     }
-    int game_over;  // 0: not over, 1: win, -1: lose
+
+    bool isGameOver() const {
+        return gameOver;
+    }
 };
 
 #endif

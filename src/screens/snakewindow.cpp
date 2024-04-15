@@ -50,6 +50,8 @@ SnakeWindow::SnakeWindow(QWidget *pParent, const Qt::WindowFlags flags)
             gameScreen = new GameScreen(this, fileName);
             stackedWidget->addWidget(gameScreen);
             stackedWidget->setCurrentWidget(gameScreen);
+
+            connect(gameScreen, &GameScreen::gameOver, this, &SnakeWindow::handleGameOver);
         }
     });
 
@@ -107,6 +109,8 @@ void SnakeWindow::handlePlayMapClicked() {
         gameScreen = new GameScreen(this, fileName);
         stackedWidget->addWidget(gameScreen);
         stackedWidget->setCurrentWidget(gameScreen);
+
+        connect(gameScreen, &GameScreen::gameOver, this, &SnakeWindow::handleGameOver);
     });
 }
 
@@ -149,11 +153,8 @@ void SnakeWindow::handleExitClicked() {
     QApplication::quit();
 }
 
-void SnakeWindow::handleGameOver(int score) {
+void SnakeWindow::handleGameOver(const int score) {
     // Switch to the end game screen when the game is over
-    delete gameScreen;
-    gameScreen = nullptr;
-
     endGameScreen = new EndGameScreen(score, this);
     setCentralWidget(endGameScreen);
 
