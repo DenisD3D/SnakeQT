@@ -75,9 +75,20 @@ EndGameScreen::EndGameScreen(const int score, QWidget *parent)
 
     connect(submitButton, &QPushButton::clicked, this, &EndGameScreen::submitName);
 
+    // Création du bouton de retour au menu principal
+    QPushButton *returnButton = new QPushButton("Return to Main Menu", this);
+    returnButton->setFont(QFont("Arial", 16));
+    returnButton->setFixedSize(200, 50); // Taille fixe pour le bouton
+    connect(returnButton, &QPushButton::clicked, this, &EndGameScreen::returnToMainMenu);
+
+
+
+
     // Ajouter les widgets au layout
     layout->addWidget(nameInput);
     layout->addWidget(submitButton);
+    // Ajout du bouton au layout
+    layout->addWidget(returnButton);
 
     // Déf layout pour la fenêtre
     setLayout(layout);
@@ -99,4 +110,10 @@ void EndGameScreen::submitName() {
     out << playerName << endl;
 
     file.close();
+}
+
+
+void EndGameScreen::returnToMainMenu() {
+    // Mettez ici le code pour revenir au menu principal, par exemple :
+    emit returnToMainMenuClicked(); // Émet un signal pour informer le parent que le bouton a été cliqué
 }

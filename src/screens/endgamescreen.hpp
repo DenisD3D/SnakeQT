@@ -23,10 +23,14 @@ public:
 
 private slots:
     void submitName();
+    void returnToMainMenu();
 
 private:
     QLabel *scoreLabel;
     QLineEdit *nameInput;
+
+signals:
+    void returnToMainMenuClicked();
 };
 
 #endif //SNAKEQT_ENDGAMESCREEN_HPP
