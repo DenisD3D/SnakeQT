@@ -8,7 +8,10 @@ set(CMAKE_AUTOUIC ON)
 
 set(ZSTD_TAG release)
 set(ZLIB_TAG develop)
-set(MZ_FORCE_FETCH_LIBS ON)
+
+if (WIN32)
+    set(MZ_FORCE_FETCH_LIBS ON)
+endif (WIN32)
 
 find_package(Qt5 COMPONENTS
         Core
