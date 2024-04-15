@@ -36,6 +36,7 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
     snakeInitDirection->setCurrentIndex(map.getInitDirection());
     auto *saveButton = new QPushButton("Save map");
     auto *saveAsButton = new QPushButton("Save map as");
+    auto *backButton = new QPushButton("Main Menu");
 
     auto *mapNameLabel = new QLabel("Map Name");
     auto *mapAuthorLabel = new QLabel("Map Author");
@@ -64,6 +65,7 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
     leftLayout->addWidget(snakeInitDirection);
     leftLayout->addWidget(saveButton);
     leftLayout->addWidget(saveAsButton);
+    leftLayout->addWidget(backButton);
 
     connect(mapName, &QLineEdit::editingFinished, [this, mapName] {
         map.setName(mapName->text());
@@ -146,6 +148,10 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
             map.setFile(fileName);
             map.save();
         }
+    });
+
+    connect(backButton, &QPushButton::clicked, [this] {
+        emit back();
     });
 
     auto *rightLayout = new QVBoxLayout;

@@ -6,15 +6,15 @@
 
 using namespace std;
 
-SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
+SnakeWindow::SnakeWindow(QWidget *pParent, const Qt::WindowFlags flags)
     : QMainWindow(pParent, flags) {
     stackedWidget = new QStackedWidget(this);
 
     // Create the main menu and connect its signals to the appropriate slots
     mainMenu = new MainMenu(this);
 
-    connect(mainMenu, &MainMenu::startGameClicked, this, &SnakeWindow::handleStartGameClicked);
-    connect(mainMenu, &MainMenu::browseMapClicked, this, &SnakeWindow::handleBrowseMapClicked);
+    connect(mainMenu, &MainMenu::playMapClicked, this, &SnakeWindow::handlePlayMapClicked);
+    connect(mainMenu, &MainMenu::createOrEditMapClicked, this, &SnakeWindow::handleCreateOrEditMapClicked);
     connect(mainMenu, &MainMenu::exitClicked, this, &SnakeWindow::handleExitClicked);
 
     stackedWidget->addWidget(mainMenu);
@@ -51,8 +51,6 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
             stackedWidget->addWidget(gameScreen);
             stackedWidget->setCurrentWidget(gameScreen);
         }
-
-
     });
 
     const auto editorMenu = new QMenu(tr("&Editor"), this);
@@ -70,6 +68,10 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
             editorScreen = new EditorScreen(fileName, true, this);
             stackedWidget->addWidget(editorScreen);
             stackedWidget->setCurrentWidget(editorScreen);
+
+            connect(editorScreen, &EditorScreen::back, [this] {
+                stackedWidget->setCurrentWidget(mainMenu);
+            });
         }
     });
 
@@ -81,27 +83,18 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags)
             editorScreen = new EditorScreen(fileName, false, this);
             stackedWidget->addWidget(editorScreen);
             stackedWidget->setCurrentWidget(editorScreen);
+
+            connect(editorScreen, &EditorScreen::back, [this] {
+                stackedWidget->setCurrentWidget(mainMenu);
+            });
         }
     });
 
     // Set the menu bar
     setMenuBar(menuBar);
-
-
-
 }
 
-void SnakeWindow::handleStartGameClicked() {
-    // Initialize and switch to the game screen when the "Start Game" button is clicked
-    gameScreen = new GameScreen(this);
-    stackedWidget->addWidget(gameScreen);
-    stackedWidget->setCurrentWidget(gameScreen);
-
-    connect(gameScreen,&GameScreen::gameOver, this, &SnakeWindow::handleGameOver);
-    setCentralWidget(gameScreen);
-}
-
-void SnakeWindow::handleBrowseMapClicked() {
+void SnakeWindow::handlePlayMapClicked() {
     browseMapScreen = new BrowseMapScreen(this);
     stackedWidget->addWidget(browseMapScreen);
     stackedWidget->setCurrentWidget(browseMapScreen);
@@ -114,8 +107,41 @@ void SnakeWindow::handleBrowseMapClicked() {
         gameScreen = new GameScreen(this, fileName);
         stackedWidget->addWidget(gameScreen);
         stackedWidget->setCurrentWidget(gameScreen);
-
     });
+}
+
+void SnakeWindow::handleCreateOrEditMapClicked() {
+    // Show a message box asking either to create or edit a map and open appropriately the editor
+    const auto result = QMessageBox::question(this, "Create or Edit Map",
+                                              "Would you like to create a new map or edit an existing one?",
+                                              "Create", "Edit", "Cancel", 0, 2);
+    if (result == 0) {
+        auto fileName = QFileDialog::getSaveFileName(this, tr("New Map"), QString(), tr("Map Files (*.skm)"));
+        if (!fileName.isEmpty()) {
+            if (!fileName.endsWith(".skm"))
+                fileName += ".skm";
+
+            editorScreen = new EditorScreen(fileName, true, this);
+            stackedWidget->addWidget(editorScreen);
+            stackedWidget->setCurrentWidget(editorScreen);
+
+            connect(editorScreen, &EditorScreen::back, [this] {
+                stackedWidget->setCurrentWidget(mainMenu);
+            });
+        }
+    } else if (result == 1) {
+        const auto fileName = QFileDialog::getOpenFileName(this, tr("Open Map"), QString(), tr("Map Files (*.skm)"));
+        if (!fileName.isEmpty()) {
+            std::cout << "Opening map: " << fileName.toStdString() << std::endl;
+            editorScreen = new EditorScreen(fileName, false, this);
+            stackedWidget->addWidget(editorScreen);
+            stackedWidget->setCurrentWidget(editorScreen);
+
+            connect(editorScreen, &EditorScreen::back, [this] {
+                stackedWidget->setCurrentWidget(mainMenu);
+            });
+        }
+    }
 }
 
 void SnakeWindow::handleExitClicked() {

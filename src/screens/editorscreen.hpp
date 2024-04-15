@@ -88,5 +88,8 @@ public slots:
     void showTileSelectorContextMenu(const QPoint &pos);
 
     void placeTileAtPosition(Position pos, bool is_right_click);
+
+signals:
+    void back();
 };
 #endif //EDITORSCREEN_HPP

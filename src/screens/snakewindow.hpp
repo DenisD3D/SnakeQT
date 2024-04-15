@@ -25,9 +25,9 @@ public:
     explicit SnakeWindow(QWidget *pParent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 
 public slots:
-    void handleStartGameClicked();
+    void handlePlayMapClicked();
 
-    void handleBrowseMapClicked();
+    void handleCreateOrEditMapClicked();
 
     void handleGameOver(int score);
 

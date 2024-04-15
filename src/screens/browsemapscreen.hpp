@@ -10,7 +10,7 @@ class BrowseMapScreen final : public QWidget {
     Q_OBJECT
     QListWidget *mapList;
     QPushButton *loadButton;
-    FileDownloader *downloader;
+    FileDownloader *downloader = nullptr;
 
     void loadOnlineMaps();
 

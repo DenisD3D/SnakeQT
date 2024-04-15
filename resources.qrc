@@ -6,5 +6,7 @@
         <file>images/wall.png</file>
         <file>images/apple.png</file>
         <file>images/cloud.png</file>
+        <file>images/drive.png</file>
+        <file>images/game_played.otf</file>
     </qresource>
 </RCC>
