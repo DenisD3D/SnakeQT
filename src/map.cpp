@@ -25,6 +25,7 @@ Map::Map() {
 Map::Map(const QString &absolute_file_path, const bool create_map): file(absolute_file_path) {
     default_tile = "ground";
     apple_texture.load(":/images/apple.png");
+    bonus_texture.load(":/images/bonus.png");
     snake_head_texture.load(":/images/sneak_head.png");
     snake_body_texture.load(":/images/sneak_body.png");
 
@@ -74,6 +75,16 @@ Map::Map(const QString &absolute_file_path, const bool create_map): file(absolut
         QByteArray texture_data;
         zip_file.extractFile(root.attribute("apple_texture"), texture_data);
         if (!apple_texture.loadFromData(texture_data)) {
+            qDebug() << "Map: could not load texture";
+            return;
+        }
+    }
+
+    if (root.hasAttribute("bonus_texture")) {
+        has_custom_bonus_texture = true;
+        QByteArray texture_data;
+        zip_file.extractFile(root.attribute("bonus_texture"), texture_data);
+        if (!bonus_texture.loadFromData(texture_data)) {
             qDebug() << "Map: could not load texture";
             return;
         }
@@ -177,6 +188,9 @@ bool Map::save() {
     if (has_custom_apple_texture) {
         root.setAttribute("apple_texture", "apple.png");
     }
+    if (has_custom_bonus_texture) {
+        root.setAttribute("bonus_texture", "bonus.png");
+    }
 
     QDomElement snake = doc.createElement("snake");
     snake.setAttribute("init_x", init_x);
@@ -262,6 +276,18 @@ bool Map::save() {
         }
     }
 
+    // Save custom bonus texture
+    if (has_custom_bonus_texture) {
+        QByteArray texture_data;
+        QBuffer buffer(&texture_data);
+        buffer.open(QIODevice::WriteOnly);
+        bonus_texture.save(&buffer, "PNG");
+        if (!writer.addFileToZip("bonus.png", texture_data)) {
+            qDebug() << "Map: could not save bonus texture";
+            return false;
+        }
+    }
+
     // Save snake textures
     if (has_custom_snake_head_texture) {
         QByteArray texture_data;
@@ -300,12 +326,14 @@ Map::Map(const Map &map) {
     snake_head_texture = map.snake_head_texture;
     snake_body_texture = map.snake_body_texture;
     apple_texture = map.apple_texture;
+    bonus_texture = map.bonus_texture;
     default_tile = map.default_tile;
     tiles = new TileType *[width * height];
     for (int i = 0; i < width * height; i++) {
         tiles[i] = map.tiles[i];
     }
     has_custom_apple_texture = map.has_custom_apple_texture;
+    has_custom_bonus_texture = map.has_custom_bonus_texture;
     has_custom_snake_head_texture = map.has_custom_snake_head_texture;
     has_custom_snake_body_texture = map.has_custom_snake_body_texture;
 
@@ -332,6 +360,7 @@ Map &Map::operator=(const Map &other) {
         snake_head_texture = other.snake_head_texture;
         snake_body_texture = other.snake_body_texture;
         apple_texture = other.apple_texture;
+        bonus_texture = other.bonus_texture;
         default_tile = other.default_tile;
         tiles = new TileType *[width * height];
         for (int i = 0; i < width * height; i++) {
@@ -339,6 +368,7 @@ Map &Map::operator=(const Map &other) {
         }
 
         has_custom_apple_texture = other.has_custom_apple_texture;
+        has_custom_bonus_texture = other.has_custom_bonus_texture;
         has_custom_snake_head_texture = other.has_custom_snake_head_texture;
         has_custom_snake_body_texture = other.has_custom_snake_body_texture;
 

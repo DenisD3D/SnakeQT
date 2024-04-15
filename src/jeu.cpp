@@ -2,6 +2,7 @@
 #include <iostream>
 
 #define APPLE_VALUE 10
+#define BONUS_VALUE 50
 
 using namespace std;
 
@@ -53,11 +54,12 @@ bool Jeu::init() {
     dirSnake = map.getInitDirection();
 
 
-    std::uniform_int_distribution distr(0, map.getWidth() - 1);
+    std::uniform_int_distribution distrw(0, map.getWidth() - 1);
+    std::uniform_int_distribution distrh(0, map.getHeight() - 1);
     int attempts = 0;
     do {
-        applePos.x = distr(gen);
-        applePos.y = distr(gen);
+        applePos.x = distrw(gen);
+        applePos.y = distrh(gen);
         attempts++;
         if (attempts > 2 * map.getWidth() * map.getHeight()) {
             return false;
@@ -91,15 +93,38 @@ bool Jeu::tick() {
     if (posValide(posTest, WALKABLE)) {
         snake.push_front(posTest); // Add the new head
 
+        if (bonusPos == Position(-1, -1)) {
+            // There is no bonus on the map
+            // There is one chance out of 15 to spawn a bonus
+            if (std::uniform_int_distribution(0, 90)(gen) == 0) {
+                std::uniform_int_distribution distrw(0, map.getWidth() - 1);
+                std::uniform_int_distribution distrh(0, map.getHeight() - 1);
+                int attempts = 0;
+                do {
+                    bonusPos.x = distrw(gen);
+                    bonusPos.y = distrh(gen);
+                    attempts++;
+                    if (attempts > 2 * map.getWidth() * map.getHeight()) {
+                        break; // No bonus this time due to lack of space
+                    }
+                } while (!posValide(bonusPos, BONUS_SPAWN));
+            }
+        } else if (posTest == bonusPos) {
+            // The snake eats the bonus, increase the score and remove the bonus
+            increaseScore(BONUS_VALUE);
+            bonusPos = Position(-1, -1);
+        }
+
         if (posTest == applePos) {
             // The snake eats the apple, increase the score and place a new apple
             increaseScore(APPLE_VALUE);
 
-            std::uniform_int_distribution<> distr(0, map.getWidth() - 1);
+            std::uniform_int_distribution<> distrw(0, map.getWidth() - 1);
+            std::uniform_int_distribution<> distrh(0, map.getHeight() - 1);
             int attempts = 0;
             do {
-                applePos.x = distr(gen);
-                applePos.y = distr(gen);
+                applePos.x = distrw(gen);
+                applePos.y = distrh(gen);
                 attempts++;
                 if (attempts > 2 * map.getWidth() * map.getHeight()) {
                     gameOver = true;
@@ -165,6 +190,10 @@ void Jeu::setDirection(const Direction dir) {
 
 const Position *Jeu::getApplePos() const {
     return &applePos;
+}
+
+const Position *Jeu::getBonusPos() const {
+    return &bonusPos;
 }
 
 const Map &Jeu::getMap() const {

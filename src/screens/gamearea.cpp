@@ -1,7 +1,8 @@
 #include "gamearea.hpp"
 
-GameArea::GameArea(const Map &map, const std::list<Position> *snake, const Position *applePos, const bool draw_grid,
-                   QWidget *parent) : QWidget(parent), map(map), snake(snake), applePos(applePos),
+GameArea::GameArea(const Map &map, const std::list<Position> *snake, const Position *applePos, const Position *bonusPos,
+                   const bool draw_grid,
+                   QWidget *parent) : QWidget(parent), map(map), snake(snake), applePos(applePos), bonusPos(bonusPos),
                                       draw_grid(draw_grid) {
     resizeWidget();
 }
@@ -28,6 +29,11 @@ void GameArea::paintEvent(QPaintEvent *event) {
     // Dessine la pomme
     if (applePos != nullptr && *applePos != Position(-1, -1))
         painter.drawPixmap(applePos->x * TEXTURE_SIZE, applePos->y * TEXTURE_SIZE, map.getAppleTexture());
+
+    // Dessine le bonus
+    if (bonusPos != nullptr && *bonusPos != Position(-1, -1))
+        painter.drawPixmap(bonusPos->x * TEXTURE_SIZE, bonusPos->y * TEXTURE_SIZE, map.getBonusTexture());
+
 
     if (draw_grid) {
         const QPen pen(Qt::black, 1); // black color, 1px width

@@ -8,7 +8,7 @@ GameScreen::GameScreen(QWidget *parent, const QString &file_info): QWidget(paren
     jeu = Jeu(Map(file_info));
     jeu.init();
 
-    gameArea = new GameArea(jeu.getMap(), jeu.getSnake(), jeu.getApplePos(), false, this);
+    gameArea = new GameArea(jeu.getMap(), jeu.getSnake(), jeu.getApplePos(), jeu.getBonusPos(), false, this);
 
     auto *layout = new QVBoxLayout;
     auto *mapNameLabel = new QLabel(jeu.getMap().getName() + " by " + jeu.getMap().getAuthor(), this);

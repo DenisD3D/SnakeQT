@@ -14,6 +14,7 @@ protected:
     Direction dirSnake;
     std::queue<Direction> directionsBuffer;
     Position applePos = Position(-1, -1);
+    Position bonusPos = Position(-1, -1);
     std::mt19937 gen;
     bool pause = false;
     bool gameOver = false;
@@ -43,6 +44,8 @@ public:
     void setDirection(Direction);
 
     const Position *getApplePos() const;
+
+    const Position *getBonusPos() const;
 
     const Map &getMap() const;
 

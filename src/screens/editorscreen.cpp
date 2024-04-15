@@ -7,7 +7,7 @@
 EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWidget *parent): QWidget(parent) {
     map = Map(file_info, create_map);
 
-    gameArea = new GameArea(map, nullptr, nullptr, true, this);
+    gameArea = new GameArea(map, nullptr, nullptr, nullptr, true, this);
 
     auto *gameLayout = new QVBoxLayout;
     gameLayout->addWidget(gameArea);
@@ -244,6 +244,10 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
     appleTexture->setIcon(QIcon(map.getAppleTexture()));
     customTextureTable->setItem(2, 0, appleTexture);
 
+    auto *bonusTexture = new QTableWidgetItem("Bonus");
+    bonusTexture->setIcon(QIcon(map.getBonusTexture()));
+    customTextureTable->setItem(2, 0, bonusTexture);
+
     connect(customTextureTable, &QTableWidget::doubleClicked,
             [this, customTextureTable](const QModelIndex &index) {
                 const QString texturePath = QFileDialog::getOpenFileName(this, "Open Image", "",
@@ -264,6 +268,9 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
                         break;
                     case 2:
                         map.setAppleTexture(&newTexture);
+                        break;
+                    case 3:
+                        map.setBonusTexture(&newTexture);
                         break;
                     default:
                         break;
@@ -292,6 +299,10 @@ EditorScreen::EditorScreen(const QString &file_info, const bool create_map, QWid
                         case 2:
                             map.setAppleTexture(nullptr);
                             item->setIcon(QIcon(map.getAppleTexture()));
+                            break;
+                        case 3:
+                            map.setBonusTexture(nullptr);
+                            item->setIcon(QIcon(map.getBonusTexture()));
                             break;
                         default:
                             break;

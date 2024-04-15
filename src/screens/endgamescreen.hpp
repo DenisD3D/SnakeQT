@@ -7,7 +7,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-class EndGameScreen : public QWidget {
+class EndGameScreen final : public QWidget {
 Q_OBJECT
 
 public:

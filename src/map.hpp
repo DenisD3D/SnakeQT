@@ -40,11 +40,11 @@ class Map {
     int init_snake_length = 5;
     QString name, author;
     Direction init_direction = DROITE;
-    QPixmap snake_head_texture, snake_body_texture, apple_texture;
+    QPixmap snake_head_texture, snake_body_texture, apple_texture, bonus_texture;
     QString default_tile;
     QMap<QString, TileType> types;
     TileType **tiles;
-    bool has_custom_apple_texture = false, has_custom_snake_head_texture = false, has_custom_snake_body_texture = false;
+    bool has_custom_apple_texture = false, has_custom_bonus_texture = false, has_custom_snake_head_texture = false, has_custom_snake_body_texture = false;
 
 public:
     Map();
@@ -75,6 +75,7 @@ public:
     QPixmap getSnakeHeadTexture() const { return snake_head_texture; }
     QPixmap getSnakeBodyTexture() const { return snake_body_texture; }
     QPixmap getAppleTexture() const { return apple_texture; }
+    QPixmap getBonusTexture() const { return bonus_texture; }
     QMap<QString, TileType> getTypes() const { return types; }
     TileType **getTiles() const { return tiles; }
     QString getDefaultTile() const { return default_tile; }
@@ -153,6 +154,17 @@ public:
 
         has_custom_apple_texture = true;
         apple_texture = *texture;
+    }
+
+    void setBonusTexture(const QPixmap *texture) {
+        if (texture == nullptr) {
+            has_custom_bonus_texture = false;
+            bonus_texture.load(":/images/bonus.png");
+            return;
+        }
+
+        has_custom_bonus_texture = true;
+        bonus_texture = *texture;
     }
 
     void setDefaultTile(const QString &type) { default_tile = type; }

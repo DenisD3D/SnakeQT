@@ -156,7 +156,8 @@ void SnakeWindow::handleExitClicked() {
 void SnakeWindow::handleGameOver(const int score) {
     // Switch to the end game screen when the game is over
     endGameScreen = new EndGameScreen(score, this);
-    setCentralWidget(endGameScreen);
+    stackedWidget->addWidget(endGameScreen);
+    stackedWidget->setCurrentWidget(endGameScreen);
 
     update();
 }

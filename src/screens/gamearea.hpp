@@ -15,11 +15,13 @@ class GameArea final : public QWidget {
     const Map &map;
     const std::list<Position> *snake;
     const Position *applePos;
+    const Position *bonusPos;
     Position lastPos;
     bool draw_grid;
 
 public:
     explicit GameArea(const Map &map, const std::list<Position> *snake = nullptr, const Position *applePos = nullptr,
+                      const Position *bonusPos = nullptr,
                       bool draw_grid = false, QWidget *parent = nullptr);
 
     void resizeWidget();
