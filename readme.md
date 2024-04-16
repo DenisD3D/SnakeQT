@@ -41,6 +41,8 @@ cmake --build build
    e.g. `C:\Qt\5.15.2\mingw81_64\plugins\platforms`) before running SnakeQT.exe.
 7. Run the executable in the build directory.
 
+Already compiled version of the game are available for each commit under the Actions section of Github. They are compiled automatically on a remote server for each new version of the game : https://github.com/DenisD3D/SnakeQT/actions
+
 ## Features
 
 - File based map loading
