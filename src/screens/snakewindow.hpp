@@ -33,7 +33,9 @@ public slots:
 
     static void handleExitClicked();
 
-    void returnToMainMenu();
+    void returnToMainMenu() const;
+
+    void replayMap();
 
     void toggleFullScreen() {
         if (windowState() & Qt::WindowFullScreen) {

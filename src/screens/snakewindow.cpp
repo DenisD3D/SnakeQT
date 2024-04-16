@@ -154,15 +154,32 @@ void SnakeWindow::handleExitClicked() {
 }
 
 void SnakeWindow::handleGameOver(const int score) {
+    const QString filePath = gameScreen->jeu.getMap().getFile();
+    const QFileInfo fileInfo(filePath);
+    const QString baseName = fileInfo.baseName();
+
     // Switch to the end game screen when the game is over
-    endGameScreen = new EndGameScreen(score, this);
+    endGameScreen = new EndGameScreen(baseName, score, this);
     stackedWidget->addWidget(endGameScreen);
     stackedWidget->setCurrentWidget(endGameScreen);
+    connect(endGameScreen, &EndGameScreen::back, [this] {
+        stackedWidget->setCurrentWidget(mainMenu);
+    });
+
+    connect(endGameScreen, &EndGameScreen::replayMap, this, &SnakeWindow::replayMap);
 
     update();
 }
 
-void SnakeWindow::returnToMainMenu() {
+void SnakeWindow::returnToMainMenu() const {
     // Return to the main menu
     stackedWidget->setCurrentWidget(mainMenu);
+}
+
+void SnakeWindow::replayMap() {
+    gameScreen = new GameScreen(this, gameScreen->jeu.getMap().getFile());
+    stackedWidget->addWidget(gameScreen);
+    stackedWidget->setCurrentWidget(gameScreen);
+
+    connect(gameScreen, &GameScreen::gameOver, this, &SnakeWindow::handleGameOver);
 }

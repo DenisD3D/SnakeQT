@@ -101,7 +101,7 @@ void BrowseMapScreen::loadClicked() {
 void BrowseMapScreen::mapSelectionChanged() {
     if (mapList->currentItem() != nullptr) {
         loadButton->setText(mapList->currentItem()->data(Qt::UserRole).toBool() ? "Play" : "Download and Play");
-        loadButton->setStyleSheet(mapList->currentItem()->data(Qt::UserRole).toBool() ? "font-size: 20px;" : "font-size: 17px;");
+        loadButton->setStyleSheet(mapList->currentItem()->data(Qt::UserRole).toBool() ? "" : "font-size: 17px;");
     }
 }
 

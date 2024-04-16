@@ -64,6 +64,7 @@ public:
     TileType getTileAt(const Position &) const;
 
     // Getters
+    QString getFile() const { return file; }
     int getWidth() const { return width; }
     int getHeight() const { return height; }
     int getInitX() const { return init_x; }

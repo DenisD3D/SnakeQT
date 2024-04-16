@@ -6,6 +6,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 class FileDownloader final : public QObject {
     Q_OBJECT
@@ -28,4 +30,22 @@ private:
     QByteArray m_DownloadedData;
 };
 
+class ScoreManager final : public QObject {
+    Q_OBJECT
+
+    QNetworkAccessManager *manager;
+
+public:
+    explicit ScoreManager(QObject *parent = nullptr);
+
+    void upload_score(const QString &map_name, const QString &name, int score) const;
+
+    void get_highscores(const QString &map_name) const;
+
+signals:
+    void highscoresReceived(const QList<QPair<QString, QVariant> > &highscores);
+
+private slots:
+    void onRequestFinished(QNetworkReply *reply);
+};
 #endif // NETWORK_MANAGER_H
