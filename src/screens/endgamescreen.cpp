@@ -1,4 +1,5 @@
 #include "endgamescreen.hpp"
+#include "snakewindow.hpp"
 
 #include <qfontdatabase.h>
 
@@ -76,10 +77,19 @@ EndGameScreen::EndGameScreen(const int score, QWidget *parent)
     connect(submitButton, &QPushButton::clicked, this, &EndGameScreen::submitName);
 
     // Création du bouton de retour au menu principal
-    QPushButton *returnButton = new QPushButton("Return to Main Menu", this);
-    returnButton->setFont(QFont("Arial", 16));
+    QPushButton *returnButton = new QPushButton("Main Menu", this);
+    snakefont.setPointSize(20);
+    returnButton->setFont(snakefont);
+    returnButton->setStyleSheet("padding-left: 20px; padding-right: 20px;");
     returnButton->setFixedSize(200, 50); // Taille fixe pour le bouton
-    connect(returnButton, &QPushButton::clicked, this, &EndGameScreen::returnToMainMenu);
+    connect(returnButton, &QPushButton::clicked, [this]() {
+        //  widget parent (SnakeWindow)
+        SnakeWindow *snakeWindow = qobject_cast<SnakeWindow *>(parentWidget());
+        if (snakeWindow) {
+            // Appeler returnToMainMenu de SnakeWindow
+            snakeWindow->returnToMainMenu();
+        }
+    });
 
 
 
@@ -115,5 +125,6 @@ void EndGameScreen::submitName() {
 
 void EndGameScreen::returnToMainMenu() {
     // Mettez ici le code pour revenir au menu principal, par exemple :
-    emit returnToMainMenuClicked(); // Émet un signal pour informer le parent que le bouton a été cliqué
+    emit back();
+
 }

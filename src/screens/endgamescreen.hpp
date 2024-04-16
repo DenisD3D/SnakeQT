@@ -30,7 +30,7 @@ private:
     QLineEdit *nameInput;
 
 signals:
-    void returnToMainMenuClicked();
+    void back();
 };
 
 #endif //SNAKEQT_ENDGAMESCREEN_HPP

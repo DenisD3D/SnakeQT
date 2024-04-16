@@ -161,3 +161,8 @@ void SnakeWindow::handleGameOver(const int score) {
 
     update();
 }
+
+void SnakeWindow::returnToMainMenu() {
+    // Return to the main menu
+    stackedWidget->setCurrentWidget(mainMenu);
+}

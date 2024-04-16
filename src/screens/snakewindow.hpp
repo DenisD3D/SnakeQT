@@ -33,6 +33,8 @@ public slots:
 
     static void handleExitClicked();
 
+    void returnToMainMenu();
+
     void toggleFullScreen() {
         if (windowState() & Qt::WindowFullScreen) {
             showNormal();
