@@ -50,6 +50,16 @@ cmake --build build
 - Online high score system computed from apple and bonus eaten
 - Full screen support
 
+## Maps
+
+Maps are available directly in the game. They can also be downloaded manually from
+the [map repository](https://github.com/DenisD3D/SnakeQT-API/tree/main/maps) and placed in
+the `maps` folder. To make a map available for download it must be added to the map repository.
+Current most advanced maps are :
+
+- Basic 2
+- Island 1
+
 ## Map File format
 
 Map are stored as a zip file ending with .skm. The zip file contains the following files:
@@ -81,6 +91,13 @@ Map are stored as a zip file ending with .skm. The zip file contains the followi
 - Add a campaign mode where game switch to the next map when a certain score is reached
 - Support for adaptive textures (choosing the right texture depending on the surrounding tiles) instead of loading all 9
   textures as separate ones
+
+## API
+
+The game uses a REST API to download maps and upload high scores. The API is available at https://snakeqt.denisd3d.fr.
+To source code is available on [github](https://github.com/DenisD3D/SnakeQT-API) and the documentation directly on
+the [dedicated website page](https://snakeqt.denisd3d.fr/docs). HighScore upload is voluntarily hidden from the
+documentation to avoid manual upload.
 
 ## Tile preprocessing using imageMagick
 
